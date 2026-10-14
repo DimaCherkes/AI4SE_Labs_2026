@@ -1,0 +1,10 @@
+{
+  "framework_id": "icio",
+  "framework_name": "ICIO",
+  "model": "Gemini 3.8 Flash (High)",
+  "total_questions": 155,
+  "start_time": "2026-10-14T20:26:54Z",
+  "end_time": "2026-10-14T20:31:17Z",
+  "total_inference_time_seconds": 258.4,
+  "avg_latency_ms": 1667.1
+}

@@ -1,0 +1,28 @@
+{
+  "dataset_size": 155,
+  "costar_vs_icio": {
+    "binary_differences": 0,
+    "jaccard_differences": 0,
+    "accuracy_p_value": 1.0,
+    "time_reduction_seconds": 52.6,
+    "percentage_speedup": 16.91
+  },
+  "costar_icio_vs_fewshot": {
+    "contingency_table": {
+      "n00": 1,
+      "n01": 0,
+      "n10": 6,
+      "n11": 148
+    },
+    "mcnemar_chi2": 4.1667,
+    "mcnemar_exact_p_value": 0.03125,
+    "is_significant_alpha_0_05": true,
+    "is_significant_alpha_0_01": false,
+    "wilcoxon_w_positive": 21.0,
+    "wilcoxon_w_negative": 0,
+    "wilcoxon_p_value": 0.03125,
+    "paired_t_stat": 1.5223,
+    "paired_t_p_value": 0.12793,
+    "cohens_d": 0.1223
+  }
+}

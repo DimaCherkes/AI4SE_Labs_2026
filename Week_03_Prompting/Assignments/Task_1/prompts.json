@@ -1,0 +1,80 @@
+{
+  "task": "Week 03 - Task 1: Prompt Frameworks Formulation",
+  "target_problem": "Text-to-SQL generation on the restaurants SQLite database",
+  "target_schema": {
+    "tables": [
+      {
+        "name": "RESTAURANT",
+        "columns": [
+          {"name": "ID", "type": "int(11)", "is_pk": true, "is_fk": false},
+          {"name": "NAME", "type": "varchar(255)", "is_pk": false, "is_fk": false},
+          {"name": "FOOD_TYPE", "type": "varchar(255)", "is_pk": false, "is_fk": false},
+          {"name": "CITY_NAME", "type": "varchar(255)", "is_pk": false, "is_fk": true},
+          {"name": "RATING", "type": "decimal(1,1)", "is_pk": false, "is_fk": false}
+        ]
+      },
+      {
+        "name": "LOCATION",
+        "columns": [
+          {"name": "RESTAURANT_ID", "type": "int(11)", "is_pk": true, "is_fk": true},
+          {"name": "HOUSE_NUMBER", "type": "int(11)", "is_pk": false, "is_fk": false},
+          {"name": "STREET_NAME", "type": "varchar(255)", "is_pk": false, "is_fk": false},
+          {"name": "CITY_NAME", "type": "varchar(255)", "is_pk": false, "is_fk": true}
+        ]
+      },
+      {
+        "name": "GEOGRAPHIC",
+        "columns": [
+          {"name": "CITY_NAME", "type": "varchar(255)", "is_pk": true, "is_fk": true},
+          {"name": "COUNTY", "type": "varchar(255)", "is_pk": false, "is_fk": false},
+          {"name": "REGION", "type": "varchar(255)", "is_pk": false, "is_fk": false}
+        ]
+      }
+    ],
+    "target_projection": "LOCATION.HOUSE_NUMBER, RESTAURANT.NAME",
+    "primary_join": "RESTAURANT.ID = LOCATION.RESTAURANT_ID"
+  },
+  "prompts": [
+    {
+      "id": "co-star",
+      "name": "CO-STAR",
+      "source": "https://frompting.com/frameworks/co-star",
+      "description": "Context, Objective, Style, Tone, Audience, Response format framework originating from GovTech Singapore. Ensures strict formatting and persona-grounded task execution.",
+      "components": {
+        "Context": "Defines the database schema, SQLite dialect, and domain context.",
+        "Objective": "Instructs the model to generate a single executable SQLite query projecting LOCATION.HOUSE_NUMBER, RESTAURANT.NAME, mapping constraints, and filtering distractors.",
+        "Style": "Deterministic, standards-compliant SQL query syntax using table aliases.",
+        "Tone": "Technical, rigorous, deterministic.",
+        "Audience": "Automated evaluation script and SQLite database query engine.",
+        "Response": "Raw SQL query text only, without markdown fences or conversational explanations."
+      },
+      "template": "# CONTEXT\nYou are an expert SQL database engineer interacting with a SQLite database containing restaurant data.\nThe database schema consists of:\n- RESTAURANT (ID int(11) PRIMARY KEY, NAME varchar(255), FOOD_TYPE varchar(255), CITY_NAME varchar(255), RATING decimal(1,1))\n- LOCATION (RESTAURANT_ID int(11) PRIMARY KEY, HOUSE_NUMBER int(11), STREET_NAME varchar(255), CITY_NAME varchar(255))\n- GEOGRAPHIC (CITY_NAME varchar(255) PRIMARY KEY, COUNTY varchar(255), REGION varchar(255))\n\nForeign key relationships:\n- LOCATION.RESTAURANT_ID references RESTAURANT.ID\n- RESTAURANT.CITY_NAME references GEOGRAPHIC.CITY_NAME\n- LOCATION.CITY_NAME references GEOGRAPHIC.CITY_NAME\n\n# OBJECTIVE\nConvert the provided natural language user question into a single, executable, and optimized SQLite SQL query.\nRequirements:\n1. Always project exactly two columns in this order: `LOCATION.HOUSE_NUMBER, RESTAURANT.NAME`.\n2. Always JOIN RESTAURANT and LOCATION on `RESTAURANT.ID = LOCATION.RESTAURANT_ID`. JOIN GEOGRAPHIC only if county or regional filtering is required.\n3. Ignore any conversational filler, chit-chat, or unrelated remarks in the question (e.g. debates about food preferences, picnics, umbrellas).\n4. Interpret phrases such as \"best\" as sorting by rating in descending order: `ORDER BY RESTAURANT.RATING DESC LIMIT 1`.\n5. Interpret rating conditions (e.g. \"rating above X\") as `RESTAURANT.RATING > X`.\n\n# STYLE\nDeterministic, standards-compliant SQLite SQL. Use uppercase for SQL keywords and explicit table aliases.\n\n# TONE\nStrictly technical and functional.\n\n# AUDIENCE\nAn automated evaluation script running against an in-memory SQLite database via Python's sqlite3 engine.\n\n# RESPONSE FORMAT\nReturn ONLY the raw SQL query on a single line or clean query block. Do not include markdown code blocks (```sql ... ```), explanations, comments, or extra whitespace.\n\n# INPUT QUESTION\n{question}"
+    },
+    {
+      "id": "icio",
+      "name": "ICIO",
+      "source": "https://frompting.com/frameworks/icio",
+      "description": "Instruction-Context-Input-Output AI-native framework cleanly separating instructions, domain context, input variables, and output specifications to avoid prompt leakage.",
+      "components": {
+        "Instruction": "Explicit directives specifying required table joins, column projection order, distractor stripping, rating comparisons, and best-restaurant ordering.",
+        "Context": "Full database schema definitions including column types, primary keys, and foreign key relationships.",
+        "Input": "Dynamic slot containing the natural language query.",
+        "Output": "Rigid specification requiring only plain SQL string output without markdown formatting or surrounding explanation."
+      },
+      "template": "[INSTRUCTION]\nTranslate the given natural language question into a single valid SQLite query.\nFollow these exact execution rules:\n1. The SELECT clause must strictly return: LOCATION.HOUSE_NUMBER, RESTAURANT.NAME.\n2. Join RESTAURANT (aliased as T1) with LOCATION (aliased as T2) on T1.ID = T2.RESTAURANT_ID. If county or region is queried, join GEOGRAPHIC (aliased as T3) on T1.CITY_NAME = T3.CITY_NAME.\n3. Filter out all irrelevant conversational noise or distractors found in the question; extract only entities matching table attributes (food_type, city_name, street_name, rating).\n4. If the question asks for the \"best\" restaurant, order by T1.RATING DESC and append LIMIT 1.\n5. Rating thresholds described as \"above X\" must be expressed as T1.RATING > X.\n6. The output must be directly executable by SQLite without syntax errors.\n\n[CONTEXT]\nDatabase Schema:\n- Table: RESTAURANT\n  Columns: ID (int, PK), NAME (varchar), FOOD_TYPE (varchar), CITY_NAME (varchar, FK), RATING (decimal)\n- Table: LOCATION\n  Columns: RESTAURANT_ID (int, PK, FK -> RESTAURANT.ID), HOUSE_NUMBER (int), STREET_NAME (varchar), CITY_NAME (varchar, FK -> GEOGRAPHIC.CITY_NAME)\n- Table: GEOGRAPHIC\n  Columns: CITY_NAME (varchar, PK), COUNTY (varchar), REGION (varchar)\n\n[INPUT]\nQuestion: {question}\n\n[OUTPUT]\nProvide strictly the SQL query text. Do not wrap in markdown fences. Do not add introductory or concluding remarks."
+    },
+    {
+      "id": "few-shot",
+      "name": "Few-Shot Learning",
+      "source": "https://frompting.com/frameworks/few-shot",
+      "description": "In-context exemplar-based framework providing demonstration input-output pairs that guide the LLM's query generation by concrete pattern imitation rather than purely abstract descriptions.",
+      "components": {
+        "Context/Instructions": "Schema details, projection requirements, and output constraints.",
+        "Demonstrations": "Curated exemplar question-SQL pairs demonstrating standard filtering, ranking with LIMIT 1, rating conditions, and robustness to conversational noise/distractors.",
+        "Target Input": "The target natural language question to be translated.",
+        "Target Output": "Model continuation producing the exact matching SQL statement."
+      },
+      "template": "You are an expert Text-to-SQL translation model for a SQLite database with the following schema:\n- RESTAURANT (ID, NAME, FOOD_TYPE, CITY_NAME, RATING)\n- LOCATION (RESTAURANT_ID, HOUSE_NUMBER, STREET_NAME, CITY_NAME)\n- GEOGRAPHIC (CITY_NAME, COUNTY, REGION)\n\nJoin condition: RESTAURANT.ID = LOCATION.RESTAURANT_ID\nProjection rule: Always select `LOCATION.HOUSE_NUMBER, RESTAURANT.NAME`.\nDisregard any unrelated chatter or philosophical questions in the prompt.\nReturn only the raw SQL query with no markdown formatting or commentary.\n\nExample 1:\nQuestion: What is the best californian in portola valley ?\nSQL: SELECT T2.HOUSE_NUMBER, T1.NAME FROM RESTAURANT AS T1 JOIN LOCATION AS T2 ON T1.ID = T2.RESTAURANT_ID WHERE T1.FOOD_TYPE = 'californian' AND T1.CITY_NAME = 'portola valley' ORDER BY T1.RATING DESC LIMIT 1;\n\nExample 2:\nQuestion: give me a restaurant on plaza way in lafayette with a rating above 1.8 (poorly rated or better)?\nSQL: SELECT T2.HOUSE_NUMBER, T1.NAME FROM RESTAURANT AS T1 JOIN LOCATION AS T2 ON T1.ID = T2.RESTAURANT_ID WHERE T2.STREET_NAME = 'plaza way' AND T1.CITY_NAME = 'lafayette' AND T1.RATING > 1.8;\n\nExample 3:\nQuestion: While comparing dumplings with pancakes for an imaginary picnic, give me a restaurant on timber creek dr in san jose with a rating above 1.7 (poorly rated or better)?\nSQL: SELECT T2.HOUSE_NUMBER, T1.NAME FROM RESTAURANT AS T1 JOIN LOCATION AS T2 ON T1.ID = T2.RESTAURANT_ID WHERE T2.STREET_NAME = 'timber creek dr' AND T1.CITY_NAME = 'san jose' AND T1.RATING > 1.7;\n\nExample 4:\nQuestion: what is a restaurant in forestville with a rating above 4.5 (excellent or better), though I am also choosing between noodles and a sandwich for a rainy picnic?\nSQL: SELECT T2.HOUSE_NUMBER, T1.NAME FROM RESTAURANT AS T1 JOIN LOCATION AS T2 ON T1.ID = T2.RESTAURANT_ID WHERE T1.CITY_NAME = 'forestville' AND T1.RATING > 4.5;\n\nQuestion: {question}\nSQL:"
+    }
+  ]
+}

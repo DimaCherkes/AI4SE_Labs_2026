@@ -1,0 +1,12 @@
+{
+  "framework_id": "few-shot",
+  "framework_name": "Few-Shot Learning",
+  "model": "Gemini 3.8 Flash (High)",
+  "total_questions": 155,
+  "start_time": "2026-10-14T20:26:54.000000+00:00",
+  "end_time": "2026-10-14T20:31:42.400000+00:00",
+  "total_inference_time_seconds": 288.4,
+  "avg_latency_ms": 1860.65,
+  "accuracy": 0.9548,
+  "correct_predictions": 148
+}

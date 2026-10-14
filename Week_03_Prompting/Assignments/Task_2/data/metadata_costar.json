@@ -1,0 +1,12 @@
+{
+  "framework_id": "co-star",
+  "framework_name": "CO-STAR",
+  "model": "Gemini 3.8 Flash (High)",
+  "total_questions": 155,
+  "start_time": "2026-10-14T20:26:54.000000+00:00",
+  "end_time": "2026-10-14T20:32:05.000000+00:00",
+  "total_inference_time_seconds": 311.0,
+  "avg_latency_ms": 2006.45,
+  "accuracy": 0.9935,
+  "correct_predictions": 154
+}
