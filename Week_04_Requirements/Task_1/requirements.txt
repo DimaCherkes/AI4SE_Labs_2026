@@ -1,0 +1,19 @@
+# ==============================================================================
+# Requirements Refinement Agentic Network Dependencies
+# Python Runtime Target: 3.12 (macOS arm64 / Apple Silicon)
+# ==============================================================================
+
+# LangGraph & LangChain Orchestration Framework (ANS5)
+langgraph>=0.2.74,<0.3.0
+langchain-core>=0.3.38,<0.4.0
+langchain-openai>=0.3.7,<0.4.0
+openai>=1.63.0,<2.0.0
+
+# Data Validation & State Schemas
+pydantic>=2.10.6,<3.0.0
+
+# Environment Configuration & Secret Management
+python-dotenv>=1.0.1,<2.0.0
+
+# Verification & Test Suite Harness
+pytest>=8.3.4,<9.0.0
