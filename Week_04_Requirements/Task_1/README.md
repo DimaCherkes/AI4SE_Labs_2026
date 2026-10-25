@@ -67,16 +67,26 @@ python verify_pipeline.py          # 22 checks: ingestion, graph shape, output d
 pytest verify_pipeline.py -v       # same checks via pytest
 ```
 
-## What you get
+## Files and responsibilities
 
-| File | What it is |
-|---|---|
-| [requirements.md](requirements.md) | Previous live draft: 69 requirements (`REQ-001…069`), priority scale, source traces, 3 blacklisted proposals (`BLK-001…003`). Its audit did not pass, and it omits the patron-characteristics source. |
-| [Task_1_Report.md](Task_1_Report.md) | Short design report |
-| [docs/workflow.md](docs/workflow.md) | Diagrams and workflow explanation |
-| [requirements_agent.py](requirements_agent.py) | The LangGraph network and CLI |
-| [ingest.py](ingest.py) | Deterministic file reader |
-| [verify_pipeline.py](verify_pipeline.py) | Automated checks |
+| File or directory | Responsibility | Role in the submission |
+|---|---|---|
+| [requirements_agent.py](requirements_agent.py) | Main CLI entry point and LangGraph workflow: extraction, deduplication, audit/refinement loop, and Markdown export. | Required script |
+| [ingest.py](ingest.py) | Parses the input `.txt` and `.eml` files and retains source paths for traceability; also has a standalone inspection CLI. | Required supporting script |
+| [data/corpus/](data/corpus/) | Example input documents read by the pipeline; these are not generated output. | Include when the submission must be reproducible and the corpus is not supplied separately |
+| [requirements.md](requirements.md) | Generated requirements specification, including priorities, source citations, and a blacklist. | Required system output after a successful live run |
+| [Task_1_Report.md](Task_1_Report.md) | Design report explaining node responsibilities, model choices, feedback loop, and assignment coverage. | Required report |
+| [README.md](README.md) | Project overview, setup, run instructions, and this file map. | Include with the report and scripts |
+| [requirements.txt](requirements.txt) | Python package dependencies; despite its name, it is not the generated requirements specification. | Include so the scripts can run |
+| [docs/workflow.md](docs/workflow.md) | Detailed workflow diagrams and execution walkthrough. | Optional supporting documentation |
+| [verify_pipeline.py](verify_pipeline.py), [test_pipeline_failures.py](test_pipeline_failures.py) | Structural verification and regression tests; neither runs as part of normal generation. | Optional verification material |
+| [.env.example](.env.example) | Template showing the required environment variable. | Optional setup aid |
+| [Task_1.md](Task_1.md) | Original assignment statement. | Reference, not a deliverable |
+| [requirements_mock.md](requirements_mock.md) | Saved output from an offline mock run. | Test artifact, not the live system output |
+| [validation_report.md](validation_report.md) | Record of the review, fixes, checks, and remaining limitations. | Review artifact, not the architecture report |
+| `.env`, `.venv/`, `__pycache__/`, `.pytest_cache/` | Local credentials, environment, and caches. | Do not submit; `.env` may contain an API key |
+
+The current [requirements.md](requirements.md) is a previous live draft with 69 requirements and 3 blacklisted proposals. Its audit did not pass, and it omits the patron-characteristics source. Regenerate and verify it before treating it as the final deliverable; a failed run preserves the existing file.
 
 ## Good to know
 

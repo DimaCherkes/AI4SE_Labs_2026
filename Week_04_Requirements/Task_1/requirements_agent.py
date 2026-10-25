@@ -682,7 +682,12 @@ def _resolve_candidate_sources(
         for item in raw_sources.get(source, [source]):
             normalized = item.replace("\\", "/")
             if normalized not in known_paths:
-                matches = [path for path in known_paths if Path(path).name == normalized]
+                matches = [path for path in known_paths if Path(path).name == Path(normalized).name]
+                if len(matches) != 1:
+                    date_match = re.search(r"(\d{4}-\d{2}-\d{2}|pines\d{3})", normalized, re.IGNORECASE)
+                    if date_match:
+                        token = date_match.group(1).lower()
+                        matches = [path for path in known_paths if token in path.lower()]
                 if len(matches) != 1:
                     raise ValueError(f"Citation does not identify one corpus document: {source!r}")
                 normalized = matches[0]
@@ -783,9 +788,11 @@ def extract_requirements(state: AgentState) -> Dict[str, Any]:
         batches.append(current_batch)
 
     raw_requirements: List[Dict[str, Any]] = []
+    known_paths = {d["source_path"] for d in documents if d.get("source_path")}
 
     for idx, batch in enumerate(batches, start=1):
         batch_entries = []
+        batch_paths = {d.get("source_path", "doc.txt") for d in batch if d.get("source_path")}
         for i, d in enumerate(batch, start=1):
             src = d.get('source_path', 'doc.txt')
             t = d.get('title', 'Document')
@@ -799,8 +806,8 @@ def extract_requirements(state: AgentState) -> Dict[str, Any]:
             f"{docs_text}\n\n"
             f"Extraction Guidelines:\n"
             f"1. For each requirement provide: title (>=3 words), narrative paragraph explanation (>=40 words), "
-            f"   valid MoSCoW priority (Must Have, Should Have, Could Have, Won't Have), relative source paths, "
-            f"   and functional subsystem.\n"
+            f"   valid MoSCoW priority (Must Have, Should Have, Could Have, Won't Have), exact relative source paths "
+            f"   from {sorted(batch_paths)}, and functional subsystem.\n"
             f"2. Extract concrete functional requirements covering core workflows discussed in the text.\n"
             f"3. Include explicitly rejected, discarded, or conflicting proposals as separate candidates "
             f"with Won't Have priority. State the rejected proposal plainly so the next node can put it "
@@ -811,6 +818,7 @@ def extract_requirements(state: AgentState) -> Dict[str, Any]:
             f"preserve any explicit 'requirement consolidated' or summary decision, with its own source path.\n"
             f"6. Exclude non-functional conversational chatter and informal digressions.\n"
         )
+        batch_extracted: List[Dict[str, Any]] = []
         try:
             structured_llm = llm.with_structured_output(ExtractionBatchResult)
             res: ExtractionBatchResult = structured_llm.invoke([
@@ -819,8 +827,7 @@ def extract_requirements(state: AgentState) -> Dict[str, Any]:
             ])
             for req in res.requirements:
                 d_req = req.model_dump() if hasattr(req, "model_dump") else req.dict()
-                d_req["id"] = f"RAW-{len(raw_requirements)+1:03d}"
-                raw_requirements.append(d_req)
+                batch_extracted.append(d_req)
         except Exception as e:
             logger.warning(f"[Node: extract_requirements] Batch {idx} structured invoke failed: {e}; attempting JSON fallback")
             try:
@@ -831,10 +838,15 @@ def extract_requirements(state: AgentState) -> Dict[str, Any]:
                 parsed = _parse_json_object(response.content)
                 if parsed and "requirements" in parsed:
                     for item in parsed["requirements"]:
-                        item["id"] = f"RAW-{len(raw_requirements)+1:03d}"
-                        raw_requirements.append(item)
+                        batch_extracted.append(item)
             except Exception as e2:
                 raise RuntimeError(f"Extraction failed for batch {idx}/{len(batches)}") from e2
+
+        for d_req in batch_extracted:
+            if known_paths and d_req.get("sources"):
+                d_req["sources"] = _resolve_candidate_sources(d_req["sources"], {}, known_paths)
+            d_req["id"] = f"RAW-{len(raw_requirements)+1:03d}"
+            raw_requirements.append(d_req)
 
     if not raw_requirements:
         raise RuntimeError("Live extraction returned zero requirements; no output was written")
@@ -877,10 +889,13 @@ def resolve_conflicts_and_deduplicate(state: AgentState) -> Dict[str, Any]:
         for r in raw_reqs
     ], indent=2)
 
+    valid_paths_list = sorted({d["source_path"] for d in documents if d.get("source_path")})
+
     prompt = (
         "You are a requirements deduplication and conflict resolution engine.\n"
         "Analyze the following list of candidate requirements extracted from the corpus:\n\n"
         f"{req_summaries}\n\n"
+        f"Valid corpus source paths:\n{json.dumps(valid_paths_list)}\n\n"
         "Tasks:\n"
         "1. Merge semantically duplicate or overlapping requirements into a unified specification. Combine their source lists.\n"
         "2. Ensure each active requirement has a descriptive title (>=3 words) and a narrative paragraph explanation (>=40 words).\n"
@@ -889,8 +904,8 @@ def resolve_conflicts_and_deduplicate(state: AgentState) -> Dict[str, Any]:
         "into the Blacklist with sequential IDs BLK-001, BLK-002, ... and a rationale (>=15 words). "
         "If there is no evidence of a rejected proposal, leave the blacklist empty.\n"
         "5. Keep every behavior and rationale grounded in the candidates. Do not invent workflows, fields, "
-        "constraints, or rejected proposals. Cite source paths or the candidate RAW IDs; those IDs will "
-        "be resolved to corpus paths before export.\n"
+        "constraints, or rejected proposals. Cite exact source paths from the valid corpus source paths list "
+        "above or the candidate RAW IDs; never invent or rename file paths.\n"
         "6. Preserve every source document that has a distinct substantive requirement or explicit rejection "
         "in at least one active requirement or blacklist citation. Do not drop a unique source during merging.\n"
     )
@@ -944,6 +959,36 @@ def resolve_conflicts_and_deduplicate(state: AgentState) -> Dict[str, Any]:
     for idx, b in enumerate(blacklist, start=1):
         b["id"] = f"BLK-{idx:03d}"
         b["sources"] = _resolve_candidate_sources(b.get("sources", []), raw_sources, known_paths)
+
+    # If the deduplication model omitted all candidates from a source file that was present
+    # in raw_reqs, carry forward the extracted candidates for that source so no file is dropped.
+    cited_after_dedup = {src for item in (refined + blacklist) for src in item.get("sources", [])}
+    raw_cited_paths = {src for r in raw_reqs for src in r.get("sources", []) if src in known_paths}
+    dropped_raw_paths = sorted(raw_cited_paths - cited_after_dedup)
+    if dropped_raw_paths:
+        logger.warning("[Node: resolve_conflicts_and_deduplicate] Restoring candidates from omitted source files: %s",
+                       dropped_raw_paths)
+        for path in dropped_raw_paths:
+            matching_raw = [r for r in raw_reqs if path in r.get("sources", []) and r.get("title") and r.get("explanation")]
+            for cand in matching_raw:
+                cand_prio = str(cand.get("priority", "Must Have")).strip()
+                if cand_prio.lower() in {"won't have", "wont have"}:
+                    blacklist.append({
+                        "id": f"BLK-{len(blacklist)+1:03d}",
+                        "title": cand["title"],
+                        "rationale": cand["explanation"],
+                        "sources": _resolve_candidate_sources(cand.get("sources", [path]), raw_sources, known_paths),
+                    })
+                else:
+                    refined.append({
+                        "id": f"REQ-{len(refined)+1:03d}",
+                        "title": cand["title"],
+                        "explanation": cand["explanation"],
+                        "priority": cand_prio if cand_prio else "Must Have",
+                        "sources": _resolve_candidate_sources(cand.get("sources", [path]), raw_sources, known_paths),
+                        "subsystem": cand.get("subsystem", "General"),
+                    })
+
     missing = _missing_consolidated_sources(documents, refined + blacklist)
     if missing:
         raise RuntimeError(f"Live deduplication dropped consolidated requirement sources: {sorted(missing)}")
@@ -1283,6 +1328,24 @@ def refine_requirements(state: AgentState) -> Dict[str, Any]:
                 'read-only reporting replica queries',
                 r["explanation"]
             )
+
+    # Ensure explicit DUPLICATE pairs flagged by the auditor are actually merged even if the
+    # refiner LLM only rewrote one or both without populating removed_requirement_ids.
+    existing_ids = {r.get("id") for r in refined_reqs}
+    for iss in issues:
+        if "duplicate" in iss.lower() or "jaccard" in iss.lower():
+            mentioned = [rid for rid in re.findall(r'\b(REQ-\d{3,4})\b', iss) if rid in existing_ids]
+            if len(mentioned) >= 2 and not any(rid in removed_req_ids for rid in mentioned):
+                dup_id, keeper_id = mentioned[0], mentioned[1]
+                if keeper_id in removed_req_ids:
+                    continue
+                if dup_id in llm_updated_map and keeper_id not in llm_updated_map:
+                    keeper_id, dup_id = dup_id, keeper_id
+                removed_req_ids.add(dup_id)
+                if keeper_id not in llm_updated_map:
+                    keeper_obj = next((r for r in refined_reqs if r.get("id") == keeper_id), None)
+                    if keeper_obj:
+                        llm_updated_map[keeper_id] = keeper_obj
 
     if removed_req_ids:
         survivors = [r for r in refined_reqs if r.get("id") not in removed_req_ids]

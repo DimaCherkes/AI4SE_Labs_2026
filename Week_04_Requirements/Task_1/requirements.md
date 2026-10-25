@@ -1,7 +1,5 @@
 # Evergreen PINES Software Requirements Specification
 
-> **Validation status: draft.** This older run ended with 16 unresolved audit issues and omits the consolidated patron-characteristics source. It has not been approved by the network.
-
 ## 1. Executive Summary & Document Scope
 
 This document specifies the software requirements synthesized across heterogeneous source artifacts including committee meeting minutes, technical interviews, email deliberation threads, patron surveys, and architectural specifications.
@@ -21,573 +19,537 @@ The following table summarizes all active software requirements refined by the a
 
 | ID | Requirement Title | Subsystem | Priority | Sources |
 |---|---|---|---|---|
-| REQ-001 | Reproducible material volume snapshots | Material Volume | Must Have | `conversations/conv_pines014_material_volume.eml`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-002 | Governed categories and active holds | Material Volume | Must Have | `conversations/conv_pines014_material_volume.eml`, `email_report_features.eml` |
-| REQ-003 | Capacity metrics and branch drilldown | Material Volume | Must Have | `conversations/conv_pines015_capacity_interface.eml` |
-| REQ-004 | Deterministic shelf allocation comparisons | Material Volume | Must Have | `conversations/conv_pines016_shelf_space.eml` |
-| REQ-005 | Collection use and distribution analysis | Material Volume | Must Have | `early_draft_srs_galecia.txt` |
-| REQ-006 | Missing and damaged items reporting | Material Volume | Must Have | `conversations/conv_pines019_020_missing_intransit.eml` |
-| REQ-007 | Deterministic transit aging reports | Material Volume | Must Have | `conversations/conv_pines019_020_missing_intransit.eml`, `interview_cataloging_2009-05-08.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-008 | Transfer labels and failure notifications | Query/Queue | Should Have | `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines015_capacity_interface.eml` |
-| REQ-009 | Controlled batch item transfers | Query/Queue | Must Have | `conversations/conv_pines018_item_transfer.eml` |
-| REQ-010 | Governed reusable query and input sharing | Query/Queue | Must Have | `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines014_material_volume.eml`, `email_report_features.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-011 | Transfer confirmation and controlled undo | Query/Queue | Must Have | `conversations/conv_pines018_item_transfer.eml`, `survey_results_2009.txt` |
-| REQ-012 | Audited sanctioned transfer reversion | Query/Queue | Should Have | `conversations/conv_pines018_item_transfer.eml`, `interview_cataloging_2009-05-08.txt` |
-| REQ-013 | Permissions audit trail and transfer history tracking | Security/Auth | Must Have | `conversations/conv_pines018_item_transfer.eml` |
-| REQ-014 | Deterministic purge candidate identification | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt` |
-| REQ-015 | Approved batch status conversion | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt` |
-| REQ-016 | Last-copy availability classification | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt` |
-| REQ-017 | Controlled deletion with retained evidence | Weeding/Purging | Should Have | `conversations/conv_pines021_item_purging.eml`, `conversations/conv_pines022_deletions.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt` |
-| REQ-018 | Authorized scheduled candidate workflows | Weeding/Purging | Could Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-019 | Deterministic inactive patron calculation | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml`, `email_financial_reports.eml` |
-| REQ-020 | Validated inactivity period configuration | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-021 | Electronic activity source integration | Security/Auth | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-022 | Configured inactive patron grouping | Query/Queue | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-023 | Authorized patron contact disclosure | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml`, `email_staff_login.eml` |
-| REQ-024 | Inactive patron fines flagging from financial subsystem | Financial | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-025 | Privacy-aware patron exclusions | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-026 | Protected inactive patron CSV export | Query/Queue | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
-| REQ-027 | Shared background execution service | Query/Queue | Must Have | `conversations/conv_pines024_inactive_patrons.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-028 | Measured consortium performance capacity | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-029 | Canonical observable job lifecycle | Query/Queue | Must Have | `email_report_features.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-030 | Isolated asynchronous report execution | Query/Queue | Must Have | `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt` |
-| REQ-031 | Timezone-aware report scheduling | Query/Queue | Must Have | `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `survey_results_2009.txt` |
-| REQ-032 | Controlled Boolean query construction | Query/Queue | Must Have | `email_report_features.eml`, `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-033 | Report templates with controlled editability and sharing | Query/Queue | Should Have | `email_report_features.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-034 | Predefined executive and board report templates | Query/Queue | Must Have | `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `survey_results_2009.txt` |
-| REQ-035 | Fair report priority scheduling | Query/Queue | Must Have | `email_report_features.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt` |
-| REQ-036 | Consistent null and blank serialization | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-037 | Display report selection criteria used | Query/Queue | Should Have | `evergreen_reference_2009.txt` |
-| REQ-038 | Canonical job progress presentation | Query/Queue | Must Have | `survey_results_2009.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt` |
-| REQ-039 | WCAG-compliant interfaces and reports | Security/Auth | Must Have | `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-040 | Owned and contextual online help | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt` |
-| REQ-041 | Centralized system authorization model | Security/Auth | Must Have | `early_draft_srs_galecia.txt`, `email_staff_login.eml`, `email_report_features.eml`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt` |
-| REQ-042 | Report artifact and folder permissions | Security/Auth | Must Have | `email_report_features.eml`, `email_staff_login.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-043 | Authorized audited state-changing actions | Security/Auth | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines021_item_purging.eml` |
-| REQ-044 | Deletion and denied-action audit trail | Security/Auth | Must Have | `conversations/conv_pines022_deletions.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-045 | Read-only reporting and sanctioned ILS boundary | Security/Auth | Must Have | `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-046 | Authoritative current historical semantics | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines014_material_volume.eml` |
-| REQ-047 | Query output preserves empty values | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt` |
-| REQ-048 | Protected administrator diagnostics | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-049 | Versioned secure external exchanges | Material Volume | Should Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-050 | Bounded OPAC availability integration | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-051 | Controlled environment configuration promotion | Query/Queue | Should Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `interview_sysadmin_2009-05-10.txt` |
-| REQ-052 | Template and query promotion subset | Query/Queue | Should Have | `evergreen_reference_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt` |
-| REQ-053 | Reconciled financial ledger reporting | Financial | Must Have | `email_financial_reports.eml`, `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-054 | Policy-controlled financial retention | Financial | Must Have | `email_financial_reports.eml` |
-| REQ-055 | Timed patron balance threshold queries | Financial | Must Have | `email_financial_reports.eml` |
-| REQ-056 | Financial breakdown and balance reports | Financial | Must Have | `email_financial_reports.eml` |
-| REQ-057 | Non-duplicating financial joins | Financial | Must Have | `email_financial_reports.eml` |
-| REQ-058 | Comparable item value calculation | Material Volume | Must Have | `email_financial_reports.eml` |
-| REQ-059 | Anonymized demographic aggregation | Patron Demographics | Must Have | `survey_results_2009.txt` |
-| REQ-060 | Large-dataset execution service usage | Query/Queue | Must Have | `conversations/conv_pines024_inactive_patrons.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-061 | Accessibility acceptance test coverage | Security/Auth | Must Have | `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-062 | Validated HTML5 output | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-063 | Transactional consistency for sanctioned operations | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
-| REQ-064 | Controlled supported server baseline | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
-| REQ-065 | Supported browser client access | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
-| REQ-066 | Bounded administrative impact on OPAC | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
-| REQ-067 | Bounded retry and cancellation behavior | Query/Queue | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
-| REQ-068 | Distinct shelf utilization and weeding analysis | Weeding/Purging | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `interview_cataloging_2009-05-08.txt` |
-| REQ-069 | Controlled weeding criteria workflow | Weeding/Purging | Must Have | `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-001 | Material Volume Report at Point in Time | Material Volume | Must Have | `conversations/conv_pines014_material_volume.eml` |
+| REQ-002 | System Capacity Overview Dashboard | Material Volume | Must Have | `conversations/conv_pines015_capacity_interface.eml` |
+| REQ-003 | Shelf Space Versus Usage Comparative Reporting | Material Volume | Must Have | `conversations/conv_pines016_shelf_space.eml` |
+| REQ-004 | Batch Item Transfer Utility With Preview | Query/Queue | Must Have | `conversations/conv_pines018_item_transfer.eml` |
+| REQ-005 | Transfer Authorization, Audit Trail, and History | Security/Auth | Must Have | `conversations/conv_pines018_item_transfer.eml` |
+| REQ-006 | Missing and Damaged Items Reporting | Material Volume | Must Have | `conversations/conv_pines019_020_missing_intransit.eml` |
+| REQ-007 | In-Transit Items Aging With Merged View | Material Volume | Must Have | `conversations/conv_pines019_020_missing_intransit.eml` |
+| REQ-008 | Item Purging Candidate Identification Report | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml` |
+| REQ-009 | Candidate Reporting and Batch Item Status Conversion | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines022_deletions.eml`, `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt` |
+| REQ-010 | Last Copy Identification Report for Deletion Safety | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml` |
+| REQ-011 | Purge and Delete Confirmation Controls With Audit Trail | Weeding/Purging | Must Have | `conversations/conv_pines021_item_purging.eml`, `conversations/conv_pines022_deletions.eml` |
+| REQ-012 | Queryable Deletion Logging and Accountability Reports | Security/Auth | Must Have | `conversations/conv_pines022_deletions.eml`, `survey_results_2009.txt` |
+| REQ-013 | Patron Demographic Querying and Grouped Aggregations | Patron Demographics | Must Have | `conversations/conv_pines023_patron_characteristics.eml` |
+| REQ-014 | In-Active Patrons Report With Configurable Inactivity | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
+| REQ-015 | Inactive Patrons Reporting Scope and Data Outputs | Patron Demographics | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
+| REQ-016 | CSV Export for Inactive Patrons Report | Query/Queue | Must Have | `conversations/conv_pines024_inactive_patrons.eml` |
+| REQ-017 | Background Processing and Caching for Inactive Patrons Report | Query/Queue | Should Have | `conversations/conv_pines024_inactive_patrons.eml` |
+| REQ-018 | Management Processes Reporting Capabilities Across Enterprise | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
+| REQ-019 | Centralized Multi-Location Management Services | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
+| REQ-020 | Report and Search Processing During Open Hours | Query/Queue | Must Have | `early_draft_srs_galecia.txt` |
+| REQ-021 | Web Browser and Windows Client Access for Management Tools | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-022 | Browser Compatibility for Web Interface | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-023 | Assistive Technology Support for Management Interfaces | Patron Demographics | Must Have | `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-024 | Relational Database Backend for Management Processes | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
+| REQ-025 | Standards-Compliant HTML Output for Web Components | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
+| REQ-026 | Development and Training Environment With Migratable Configurations | Security/Auth | Should Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-027 | Role and Group Based Access Control for Management Functions | Security/Auth | Must Have | `early_draft_srs_galecia.txt`, `email_staff_login.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
+| REQ-028 | Online Hierarchical Cross-Linked Help System | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `interview_sysadmin_2009-05-10.txt`, `evergreen_reference_2009.txt` |
+| REQ-029 | User-Friendly Query Designer for Report Construction | Query/Queue | Must Have | `email_report_features.eml` |
+| REQ-030 | Report Template Management With Restricted Editable Fields | Query/Queue | Must Have | `email_report_features.eml` |
+| REQ-031 | Fine-Grained Report Permissions and Shared Folder Control | Security/Auth | Must Have | `email_report_features.eml`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt` |
+| REQ-032 | Predefined Board/Executive Report Templates and Interface | Patron Demographics | Should Have | `email_report_features.eml`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-033 | Report Queue Status, Failure Visibility, and Cancellation Controls | Query/Queue | Must Have | `email_report_features.eml`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt` |
+| REQ-034 | Background and Isolated Processing for Long-Running Reports | Query/Queue | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt` |
+| REQ-035 | Flexible Scheduling and Delivery of Recurring Reports | Query/Queue | Must Have | `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt` |
+| REQ-036 | Save and Reuse Query Definitions and Templates | Query/Queue | Must Have | `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt`, `survey_results_2009.txt` |
+| REQ-037 | Advanced Query Capabilities for Custom Reports | Query/Queue | Must Have | `evergreen_reference_2009.txt` |
+| REQ-038 | CSV Excel-Compatible and HTML Report Output | Query/Queue | Should Have | `evergreen_reference_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt` |
+| REQ-039 | Uploaded-Based Filtering for Bulk Identifiers | Query/Queue | Should Have | `evergreen_reference_2009.txt` |
+| REQ-040 | Snapshot Historical Reporting and Transaction Retention | Query/Queue | Must Have | `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt` |
+| REQ-041 | Grouped Transaction Reporting by Organizational Dimensions | Query/Queue | Must Have | `survey_results_2009.txt` |
+| REQ-042 | Count Checkin and Checkout Types Separately | Material Volume | Must Have | `survey_results_2009.txt` |
+| REQ-043 | Count Holds by Placement Method | Query/Queue | Must Have | `survey_results_2009.txt` |
+| REQ-044 | Anonymized Demographic Statistics by Age and Geography | Patron Demographics | Must Have | `survey_results_2009.txt` |
+| REQ-045 | Inclusion of Null and Blank Fields in Results | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines023_patron_characteristics.eml` |
+| REQ-046 | Error Reporting With High-Level and Low-Level Feedback | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-047 | Report Queue Priority and Queue Jumping | Query/Queue | Must Have | `email_report_features.eml` |
+| REQ-049 | Management Reporting Isolated From OPAC Performance | Query/Queue | Must Have | `meeting_tech_subcommittee_2009-06-30.txt`, `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-052 | In-Transit, Missing, and Damaged Reports Support Delivery Coordination | Material Volume | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines019_020_missing_intransit.eml`, `interview_cataloging_2009-05-08.txt` |
+| REQ-054 | Batch Deletion Utility for Volumes, Copies, and Orphaned Bibliographic Records | Weeding/Purging | Should Have | `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt` |
+| REQ-055 | Branch-Specific Weeding and Purging Candidate Reports | Weeding/Purging | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines021_item_purging.eml` |
+| REQ-056 | Management Reporting and Analysis Tools Include Inventory and Capacity Reporting | Material Volume | Must Have | `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-057 | Cross-Branch Circulation and Inventory Comparison Reports | Query/Queue | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-058 | Linux and Solaris Server Deployment | Query/Queue | Must Have | `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-059 | Financial Reporting and Auditable Financial Tracking | Financial | Must Have | `email_financial_reports.eml`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `survey_results_2009.txt` |
+| REQ-060 | Financial Reports Compliance, Retention, and Transaction Archive With Privacy Protection | Financial | Must Have | `email_financial_reports.eml`, `email_report_features.eml` |
+| REQ-061 | Inventory/Capacity and Shelf Space Reporting Enable Space Allocation Planning | Material Volume | Must Have | `interview_cataloging_2009-05-08.txt`, `conversations/conv_pines016_shelf_space.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt` |
+| REQ-062 | Data Specifications and Record Validation Documentation for Management Processes | Query/Queue | Must Have | `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt` |
 
 ### Detailed Requirement Specifications
 
-### Requirement REQ-001: Reproducible material volume snapshots
+### Requirement REQ-001: Material Volume Report at Point in Time
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines014_material_volume.eml`, `meeting_tech_subcommittee_2009-06-30.txt`
+- **Sources:** `conversations/conv_pines014_material_volume.eml`
 - **Subsystem:** Material Volume
 
-Material-volume reports shall follow the temporal semantics defined authoritatively by REQ-046. Each report shall record scope, cutoff timestamp, source version, snapshot identifier, capture time, and completeness status. Missing historical inputs shall be marked unavailable and excluded from inferred totals. A historical snapshot is immutable; recreating it for the same cutoff shall reference the same snapshot or explicitly report that no immutable snapshot exists.
+The system shall provide a Material Volume Report that calculates and returns material volumes for a specified library at any point in time. The report must separate counts for new acquisitions, items currently checked in (on shelf), and items checked out (in circulation), and include totals plus configurable category breakdowns for monthly and board reporting use.
 
-### Requirement REQ-002: Governed categories and active holds
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines014_material_volume.eml`, `email_report_features.eml`
-- **Subsystem:** Material Volume
-
-Authorized administrators shall define, version, approve, and retire material categories, including format, genre, and local groupings, using the category-management controls described in the cited material-volume and report-feature artifacts. Each report shall store the category-version identifier used at execution. Active holds shall include open, unfulfilled holds only; cancelled, expired, fulfilled, and deleted holds shall be excluded. Role and library-scope permissions shall govern use and publication.
-
-### Requirement REQ-003: Capacity metrics and branch drilldown
+### Requirement REQ-002: System Capacity Overview Dashboard
 - **Priority:** Must Have
 - **Sources:** `conversations/conv_pines015_capacity_interface.eml`
 - **Subsystem:** Material Volume
 
-The capacity view shall calculate collection count as eligible physical items, available-item count as eligible items available at period end, circulation count as qualifying completed circulations during the period, occupied shelf length as measured occupied length, and utilization as occupied length divided by installed usable length. Reports shall state numerator, denominator, exclusions, period, branch scope, and source timestamp, while supporting filtering, trends, drilldown, 500 branches, and CSV export.
+The system shall provide a capacity overview interface showing key capacity metrics across branches simultaneously, with the ability to drill down to branch details. It must support sorting and filtering (for example by region, library type, or current load), present trend data for growth/shrink patterns, and support exporting overview data to CSV for external analysis and planning.
 
-### Requirement REQ-004: Deterministic shelf allocation comparisons
+### Requirement REQ-003: Shelf Space Versus Usage Comparative Reporting
 - **Priority:** Must Have
 - **Sources:** `conversations/conv_pines016_shelf_space.eml`
 - **Subsystem:** Material Volume
 
-Eligible circulations shall be completed checkout, renewal, or equivalent circulation events for in-scope items during the selected reporting period, excluding cancelled, test, staff, and duplicate events. Eligible items shall be in-scope physical copies with valid category assignment at the snapshot date, excluding withdrawn, duplicate, and test records. Circulation, collection, and shelf shares shall use their stated denominators; zero denominators produce not applicable and incomplete measurements are flagged.
+The system shall generate a Shelf Space Report that, for each genre and format, compares three metrics: percentage of total circulations, percentage of the collection, and percentage of total shelf space. The report must run at per-library and per-system levels, support side-by-side comparisons across libraries, and allow time-based filtering such as date range or quarter for reallocation planning.
 
-### Requirement REQ-005: Collection use and distribution analysis
+### Requirement REQ-004: Batch Item Transfer Utility With Preview
 - **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`
-- **Subsystem:** Material Volume
+- **Sources:** `conversations/conv_pines018_item_transfer.eml`
+- **Subsystem:** Query/Queue
 
-Collection-use recommendations shall use thresholds supplied by a versioned, administrator-approved configuration profile. The profile shall identify each metric, numerator, denominator, reporting period, minimum sample size, threshold value, comparison operator, and recommendation text. Reports shall display the profile name and version beside every recommendation, distinguish advisory results from decisions, and permit authorized users to export aggregate supporting measurements without exposing unauthorized item or patron data.
+The system shall provide a Batch Item Transfer Utility enabling users to build queries to identify candidate materials, save queries for reuse, manually select items from query results, and execute batch transfers to change item locations. It must include a preview of changes before execution, generate pull lists and printable transit labels for moved items, and support undo/revert operations to recover from mistaken transfers.
 
-### Requirement REQ-006: Missing and damaged items reporting
+### Requirement REQ-005: Transfer Authorization, Audit Trail, and History
+- **Priority:** Must Have
+- **Sources:** `conversations/conv_pines018_item_transfer.eml`
+- **Subsystem:** Security/Auth
+
+The system shall restrict transfer operations to authorized roles (for example managers or administrators) and record a complete transfer history for each item. Transfer events must be logged for audit purposes including who initiated the transfer and when it occurred, and also include subsequent reverts so history is queryable for repeated transfers and administrative troubleshooting.
+
+### Requirement REQ-006: Missing and Damaged Items Reporting
 - **Priority:** Must Have
 - **Sources:** `conversations/conv_pines019_020_missing_intransit.eml`
 - **Subsystem:** Material Volume
 
-The date-range filter shall use the condition-event date: the timestamp at which the missing or damaged condition was recorded or last changed, rather than discovery or report-update time. Timestamps shall be converted from their source time zone into the configured report time zone before inclusive range comparison. The report shall show condition type, notes, branch, event date, and counts, while allowing branch aggregation and consortium totals.
+The system must produce reports enumerating items marked as missing or damaged, grouped by branch to support auditing and collection management. Reports must support selectable date ranges so staff can view recent or historical counts and trends for a specified branch, and include condition notes when available to support diagnosis of damage patterns.
 
-### Requirement REQ-007: Deterministic transit aging reports
+### Requirement REQ-007: In-Transit Items Aging With Merged View
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines019_020_missing_intransit.eml`, `interview_cataloging_2009-05-08.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `conversations/conv_pines019_020_missing_intransit.eml`
 - **Subsystem:** Material Volume
 
-Parameter X shall be an integer from 1 through 3650 inclusive. A transit age is the number of calendar midnights elapsed between the transit-start date and the execution date, after both timestamps are converted to the configured report time zone and truncated to local midnight. Items are included when age is at least X; a start date equal to execution date therefore has age zero and is excluded for every valid X.
+The system must generate an in-transit aging report listing items that have been in transit longer than a configurable threshold X days (default suggested as 7). The report must be available per branch and for the entire system and must merge both 'transit-to' and 'transit-from' directions into a single view. It must allow sorting by due date so staff can prioritize oldest items.
 
-### Requirement REQ-008: Transfer labels and failure notifications
-- **Priority:** Should Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines015_capacity_interface.eml`
-- **Subsystem:** Query/Queue
-
-Responsible staff shall mean users assigned transfer-exception responsibility for the source or destination branch, or a configured consortium transfer-operations group. The delay clock begins at the confirmed transfer-batch timestamp and uses elapsed time in the configured operational time zone. The administrator-configured threshold shall be a positive whole number of hours. Notifications occur once when the threshold is exceeded and immediately for item failure, with delivery outcomes audited.
-
-### Requirement REQ-009: Controlled batch item transfers
+### Requirement REQ-008: Item Purging Candidate Identification Report
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`
-- **Subsystem:** Query/Queue
+- **Sources:** `conversations/conv_pines021_item_purging.eml`
+- **Subsystem:** Weeding/Purging
 
-Traceability: conversations/conv_pines018_item_transfer.eml, section “batch transfers.” Authorized users shall select query results or explicit items, review source and destination counts, and confirm a generated pull list. Processing shall occur in chunks no larger than the configured batch size. Each item update shall commit atomically; failures shall remain unchanged and appear in an exception list, while committed items shall not be silently reversed. Any sanctioned ILS write shall use the authorized workflow defined by REQ-045.
+The system should provide read-only reports that identify item records that are candidates for purging based on customizable criteria. Criteria must include status-based rules (for example missing, discard/weed), time-in-status thresholds (for example missing for more than X months), circulation/activity rules (for example not circulated for Y years), and allow combining criteria using AND/OR. The report must only surface candidates without performing deletions.
 
-### Requirement REQ-010: Governed reusable query and input sharing
+### Requirement REQ-009: Candidate Reporting and Batch Item Status Conversion
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines014_material_volume.eml`, `email_report_features.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Query/Queue
+- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines022_deletions.eml`, `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`
+- **Subsystem:** Weeding/Purging
 
-Saved query definitions shall contain owner, immutable version, criteria, parameter values, creation and modification timestamps, and permitted scope. Owners or administrators may share a specific version with named users, groups, or authorized library scopes; consumers may execute but cannot alter it without edit permission. Reports, transfers, and pull lists shall record the exact query-version identifier used, while construction and field authorization remain governed by REQ-032.
+The system shall provide weeding and deselection reports that identify item candidates using configurable criteria, present those candidates in a read-only view, and support explicit staff-confirmed batch status changes. Supported examples include converting multiple items from “missing” to “discard/weed” or marking selected items for purge, thereby reducing manual effort during branch-level collection maintenance.
 
-### Requirement REQ-011: Transfer confirmation and controlled undo
+### Requirement REQ-010: Last Copy Identification Report for Deletion Safety
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`, `survey_results_2009.txt`
-- **Subsystem:** Query/Queue
+- **Sources:** `conversations/conv_pines021_item_purging.eml`
+- **Subsystem:** Weeding/Purging
 
-The undo period begins when the system records successful completion of each item movement, not when the batch is submitted. It shall be configurable from 1 through 168 hours by an authorized administrator. An undo request is valid only while the item remains at the destination and has not undergone another movement or conflicting state change; otherwise that item is rejected. Partial requests produce item-level results and sanctioned compensating movements.
+The system should provide a last-copy report that identifies items representing the last copy either at a single library or across the consortium/system. The report must allow selecting scope (per library or per system) and must flag records that are the only copy within the selected scope to help catalogers update external catalog records before deletion.
 
-### Requirement REQ-012: Audited sanctioned transfer reversion
-- **Priority:** Should Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`, `interview_cataloging_2009-05-08.txt`
-- **Subsystem:** Query/Queue
-
-Traceability: conversations/conv_pines018_item_transfer.eml, section “automatic reversion”; interview_cataloging_2009-05-08.txt. Reversion rules shall specify an elapsed-day threshold or named status event, identify the transfer batch, and retrieve the original location from its audit entry. The reporting system shall submit eligible changes only through the explicitly authorized ILS workflow. Moved, checked-out, or invalid-location items shall be skipped, logged with reason and retry state, and never overwritten directly.
-
-### Requirement REQ-013: Permissions audit trail and transfer history tracking
+### Requirement REQ-011: Purge and Delete Confirmation Controls With Audit Trail
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines018_item_transfer.eml`
+- **Sources:** `conversations/conv_pines021_item_purging.eml`, `conversations/conv_pines022_deletions.eml`
+- **Subsystem:** Weeding/Purging
+
+To prevent accidental data loss, the system must identify purge or delete candidates through a read-only report, require a separate explicit manual confirmation before deletion or batch status changes, and prohibit automated deletion without that confirmation. It must retain an audit trail recording the responsible user, affected records, action, and timestamp for accountability and troubleshooting.
+
+### Requirement REQ-012: Queryable Deletion Logging and Accountability Reports
+- **Priority:** Must Have
+- **Sources:** `conversations/conv_pines022_deletions.eml`, `survey_results_2009.txt`
 - **Subsystem:** Security/Auth
 
-Only roles granted transfer-initiate or transfer-finalize permissions may perform those actions, with authorization evaluated at execution time. Every attempt and completed movement shall record actor, role, timestamp, item identifier, batch identifier, source and destination, before-and-after location, outcome, failure reason, and automated reversion details. History shall be immutable, searchable by item and time range, and retained sufficiently to investigate repeated transfers.
+The system must count and log record deletions and, where required for oversight, attempted deletions involving item, patron, bibliographic, or other record types. Each log entry must capture the record type, record identifier, deletion timestamp, responsible user, and user location or branch. Administrators must be able to query and report deletion information by record type, location, and system for auditing and troubleshooting.
 
-### Requirement REQ-014: Deterministic purge candidate identification
+### Requirement REQ-013: Patron Demographic Querying and Grouped Aggregations
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`
-- **Subsystem:** Weeding/Purging
+- **Sources:** `conversations/conv_pines023_patron_characteristics.eml`
+- **Subsystem:** Patron Demographics
 
-REQ-014 is authoritative for candidate grammar and reporting. Supported fields shall declare string, enumerated, integer, decimal, date, datetime, or Boolean type; supported operators shall be equals, not-equals, less-than, less-than-or-equal, greater-than, greater-than-or-equal, and for strings contains and starts-with where configured. Literals must match field type, dates use report time zone, unknown fields and invalid comparisons fail validation, and AND, OR, NOT require explicit parentheses when mixed.
+The system should allow reports and queries to be limited (filtered) and grouped (aggregated) by patron characteristics including configurable age ranges computed from birth_date, zip code, county of residence, home branch, patron type, and preferred language. Filters must be combinable with AND/OR logic. Grouping must support aggregates such as counts or circulation by bucket, and results must include records with null values for optional fields rather than silently excluding them.
 
-### Requirement REQ-015: Approved batch status conversion
+### Requirement REQ-014: In-Active Patrons Report With Configurable Inactivity
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`
-- **Subsystem:** Weeding/Purging
+- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
+- **Subsystem:** Patron Demographics
 
-Traceability: conversations/conv_pines021_item_purging.eml, section “approved conversion”; interview_cataloging_2009-05-08.txt; evergreen_reference_2009.txt. Reviewers shall import or select candidates from a specific REQ-014 report, preview each proposed status change, and re-evaluate the rule before confirmation. Each approved item change shall be submitted through the sanctioned ILS workflow, not direct reporting writes, and shall record actor, timestamp, prior value, new value, report identifier, success, or failure without deleting records or bypassing approval.
+The system must produce a report listing patrons who have had no circulation or electronic activity within a configurable inactivity window, driven by recorded circulation and electronic activity events. Administrators must be able to configure the inactivity cutoff period X days (with examples such as 30, 90, 180, 365, and any other numeric day value).
 
-### Requirement REQ-016: Last-copy availability classification
+### Requirement REQ-015: Inactive Patrons Reporting Scope and Data Outputs
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`
-- **Subsystem:** Weeding/Purging
+- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
+- **Subsystem:** Patron Demographics
 
-The report shall evaluate all authorized consortium copies at one identified snapshot timestamp. Availability rules shall be versioned and classify withdrawn, missing, damaged, suppressed, and other administrator-defined states; in-transit copies shall be available only when the active rule says so. It shall count eligible copies, display excluded states and reasons, and separately identify the last available copy at branch and consortium scopes without modifying catalog data.
+The inactive patrons report must support configurable reporting levels so it can be generated at different organizational scopes such as system-wide or by grouping levels like home library and county where supported. The report must include each patron's current mailing address to support outreach, and it should include electronic activity logic by explicitly considering OPAC/patron account logins, online hold placements, online renewals, and access to digital collections when those access events are recorded.
 
-### Requirement REQ-017: Controlled deletion with retained evidence
+### Requirement REQ-016: CSV Export for Inactive Patrons Report
+- **Priority:** Must Have
+- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
+- **Subsystem:** Query/Queue
+
+The system must provide an option to export the inactive patrons report in CSV format so libraries can import lists into external outreach or mailing systems. The CSV export must preserve the included fields such as mailing address, last activity date, and any flags or options applied when generating the report.
+
+### Requirement REQ-017: Background Processing and Caching for Inactive Patrons Report
 - **Priority:** Should Have
-- **Sources:** `conversations/conv_pines021_item_purging.eml`, `conversations/conv_pines022_deletions.eml`, `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`
-- **Subsystem:** Weeding/Purging
-
-Traceability: conversations/conv_pines021_item_purging.eml and conversations/conv_pines022_deletions.eml, deletion workflow sections; interview_cataloging_2009-05-08.txt; evergreen_reference_2009.txt. Deletion requires authorization, candidate preview, and explicit confirmation, then executes only through the sanctioned ILS deletion workflow. Append-only evidence shall retain resource and parent identifiers, actor, branch, timestamp, reason, authorization, and result, with tombstone metadata queryable by authorized investigators. Denied attempts are governed by REQ-044 and shall not duplicate this evidence model.
-
-### Requirement REQ-018: Authorized scheduled candidate workflows
-- **Priority:** Could Have
-- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Weeding/Purging
-
-Traceability: conversations/conv_pines021_item_purging.eml, scheduled purge section; interview_cataloging_2009-05-08.txt; meeting_tech_subcommittee_2009-06-30.txt. Scheduled jobs shall create REQ-014 read-only candidate reports by default, recording schedule, rule version, scope, execution time, and outcome. The scheduler shall not delete records or change statuses. If a separately approved product workflow is enabled, it must invoke the authorized ILS interface, require configured confirmation and permissions, and emit the audit records required by REQ-015 or REQ-017.
-
-### Requirement REQ-019: Deterministic inactive patron calculation
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`, `email_financial_reports.eml`
-- **Subsystem:** Patron Demographics
-
-For each patron, the system shall select the latest successfully ingested qualifying event from checkout, return, renewal, hold placement or fulfillment, authenticated login, or configured digital access. Events shall be deduplicated by source identifier and converted to UTC while retaining source zone. Inactivity is true when the elapsed calendar-day value reaches the configured inclusive threshold. Missing source periods shall produce incomplete status, never a false inactive result.
-
-### Requirement REQ-020: Validated inactivity period configuration
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
-- **Subsystem:** Patron Demographics
-
-X shall be a finite decimal from 0.00 through 3650.00 inclusive with no more than two fractional digits. Fractional days shall be measured as elapsed hours divided by 24 from the latest qualifying event to report execution, after conversion to UTC; a patron qualifies when elapsed time is greater than or equal to X multiplied by 24 hours. Presets 30, 90, 180, and 365 shall remain available, and invalid values shall be rejected before execution.
-
-### Requirement REQ-021: Electronic activity source integration
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
-- **Subsystem:** Security/Auth
-
-Adapters shall ingest authenticated OPAC login, online hold placement, online renewal, and successful configured digital-collection access. Each event shall include source name, stable event identifier, patron identifier, event type, source timestamp, source time zone, ingestion timestamp, and status. Only successfully ingested events participate in REQ-019; unavailable adapters or source intervals shall be reported with coverage boundaries and an incomplete-data warning.
-
-### Requirement REQ-022: Configured inactive patron grouping
-- **Priority:** Must Have
 - **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
 - **Subsystem:** Query/Queue
 
-Traceability: conversations/conv_pines024_inactive_patrons.eml, section “scope and grouping.” Supported scopes shall be system, consortium, library branch, county, and administrator-defined groups. Only an authorized administrator may create or modify groups; each group shall contain explicit library identifiers and an effective version. Membership shall be resolved from the patron’s current home-library relationship at snapshot time, and unauthorized users shall see only scopes granted by role.
+Because the inactivity query may be costly on large patron populations, the system should run the report as a background process and cache results for performance and operational safety. This includes supporting asynchronous generation and storing recent results for reuse.
 
-### Requirement REQ-023: Authorized patron contact disclosure
+### Requirement REQ-018: Management Processes Reporting Capabilities Across Enterprise
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`, `email_staff_login.eml`
-- **Subsystem:** Patron Demographics
-
-The report shall select the latest non-expired address whose effective interval contains the report timestamp, using the authoritative patron-contact source and its recorded time zone. Outreach-authorized roles may view permitted fields; all others receive masked values or unavailable indicators. Access and export events shall record actor, purpose, fields, and outcome. Contact data shall be encrypted in transit and at rest and omitted from unauthorized downstream artifacts.
-
-### Requirement REQ-024: Inactive patron fines flagging from financial subsystem
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
-- **Subsystem:** Financial
-
-Outstanding fines or fees shall be determined from the authoritative account-balance ledger at the report as-of timestamp. Posted, non-waived, non-reversed, non-refunded debit balances reduce by posted payments; pending, disputed, waived, and reversed amounts are excluded unless the configured financial policy explicitly includes them. The report shall show balance timestamp, included components, and a separate flag or section, with unavailable financial data marked incomplete.
-
-### Requirement REQ-025: Privacy-aware patron exclusions
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
-- **Subsystem:** Patron Demographics
-
-Traceability: conversations/conv_pines024_inactive_patrons.eml, section “privacy exclusions.” The selected exclusion policy shall be evaluated before result display, caching, notification, or export. A record excluded by do-not-disturb, VIP, staff, or communication-opt-out status shall remain excluded unless an explicitly named, administrator-approved exception policy grants access for a documented purpose. The exception identifier, actor, and reason shall be audited, while excluded identities shall not appear in ordinary job metadata.
-
-### Requirement REQ-026: Protected inactive patron CSV export
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`
+- **Sources:** `early_draft_srs_galecia.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: conversations/conv_pines024_inactive_patrons.eml, section “CSV export.” Export shall accept only authorized columns and produce UTF-8 CSV with declared delimiter, header, quoting, and line-ending settings. REQ-025’s exclusion policy shall be re-evaluated against the current source state immediately before export; only its named exception mechanism may permit an excluded record. The system shall audit requester, policy, columns, row count, expiry, and secure-download access, and shall prevent unauthorized retention.
+The system shall provide consolidated management reporting and analysis tools that allow administrators and managers to analyze operations, collections, branch capacity and distribution, patron demographics and interests, staff productivity and workflow, and financial transactions. Tools must support generation of aggregated and detailed reports used for enterprise-level planning, evaluation, and strategic presentations, usable by Local, Library, and Global administrators.
 
-### Requirement REQ-027: Shared background execution service
+### Requirement REQ-019: Centralized Multi-Location Management Services
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `early_draft_srs_galecia.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: conversations/conv_pines024_inactive_patrons.eml, execution section; evergreen_reference_2009.txt; interview_sysadmin_2009-05-10.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. One persistent service shall accept scheduled and on-demand jobs and provide the canonical lifecycle in REQ-029. Cache entries shall be keyed by report definition, parameters, policy version, source snapshot, and permissions. Change events shall invalidate affected keys within five minutes; permission or policy changes shall invalidate all affected entries, and manual purge shall be immediate.
+The Management Processes component shall operate as a centralized service that accepts input from and provides management services to multiple library locations within a consortium. The system must consolidate data and provide centrally-run management functions so administrators can perform system-wide analyses and control while still supporting distributed branch operations.
 
-### Requirement REQ-028: Measured consortium performance capacity
+### Requirement REQ-020: Report and Search Processing During Open Hours
+- **Priority:** Must Have
+- **Sources:** `early_draft_srs_galecia.txt`
+- **Subsystem:** Query/Queue
+
+The system shall support execution of searches and reports during library open hours without disrupting other system functions. This requires managing management-report workloads such that routine patron-facing operations remain responsive while management queries and reports run on the consolidated system.
+
+### Requirement REQ-021: Web Browser and Windows Client Access for Management Tools
 - **Priority:** Must Have
 - **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
 - **Subsystem:** Query/Queue
 
-The approved benchmark catalog shall be a controlled, versioned artifact listing representative interactive queries and standard reports, datasets, parameter values, warm or cold-cache state, concurrency, duration, percentile calculation, and exclusions. Acceptance shall use the stated 500-branch, circulation, acquisition, and concurrency workload. Administrative queries require 95th-percentile completion within five seconds, standard reports within ten minutes, and OPAC availability at least 99.9% during the defined monthly window, excluding approved maintenance.
+The system shall be accessible through a web browser or a Windows-compatible client so staff and administrators can reach management tools from typical client environments. The supported access methods must cover the delivery mechanisms for management processes and report generation.
 
-### Requirement REQ-029: Canonical observable job lifecycle
+### Requirement REQ-022: Browser Compatibility for Web Interface
 - **Priority:** Must Have
-- **Sources:** `email_report_features.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: email_report_features.eml, job status section; evergreen_reference_2009.txt; interview_sysadmin_2009-05-10.txt; meeting_tech_subcommittee_2009-06-30.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. This requirement is authoritative for lifecycle states: queued, running, cancelling, completed, failed, and cancelled. It shall record submitter and transition timestamps, expose measurable progress, permit cancellation only before commit, and audit every transition. REQ-038 supplies progress presentation, while REQ-067 supplies retry and restart rules without redefining states.
+If the management interface is implemented as a web-based interface, it must provide compatibility with the specified browsers and versions. This includes Microsoft Internet Explorer (version 6.0 and later) and Mozilla Firefox (version 2.0 and later), ensuring common browsers used by library workstations can render and operate the management interfaces.
 
-### Requirement REQ-030: Isolated asynchronous report execution
+### Requirement REQ-023: Assistive Technology Support for Management Interfaces
 - **Priority:** Must Have
-- **Sources:** `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`
-- **Subsystem:** Query/Queue
+- **Sources:** `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Patron Demographics
 
-REQ-030 is authoritative for production-resource protection. Reports shall execute asynchronously in isolated workers against a reporting tier or read-only replica and shall never write ILS production data. Under the versioned REQ-028 workload, CPU, memory, database connections, and I/O shall each be measured over synchronized rolling five-minute windows against separately recorded production baselines; administrative usage must remain below 20% of every baseline, with throttling before breach.
+The system shall be accessible using screen-reading software, screen-magnification software, and other assistive technology programs to ensure accessibility for users with disabilities. The management interfaces and online help must be usable via common assistive technology so local and global administrators and staff with accessibility needs can perform required tasks.
 
-### Requirement REQ-031: Timezone-aware report scheduling
-- **Priority:** Must Have
-- **Sources:** `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `survey_results_2009.txt`
-- **Subsystem:** Query/Queue
-
-Traceability: evergreen_reference_2009.txt; interview_sysadmin_2009-05-10.txt; survey_results_2009.txt. Schedules shall use IANA time zones and RFC 5545-compatible recurrence rules. For a nonexistent daylight-saving time, the scheduler shall move to the next valid local time; for a repeated time, it shall run once. A missed run shall be recorded and skipped, and an overlapping run shall be skipped while the prior instance runs. Delivery shall use TLS, authorized recipients, recorded outcomes, and cancellation support.
-
-### Requirement REQ-032: Controlled Boolean query construction
-- **Priority:** Must Have
-- **Sources:** `email_report_features.eml`, `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Query/Queue
-
-The query designer shall expose only authorized fields and validated join paths, with field types and permissible operators defined by the controlled data dictionary. It shall support picklists, AND, OR, and NOT, using precedence NOT then AND then OR; mixed precedence must be made explicit with parentheses. Validation shall reject unauthorized fields, incompatible literals, ambiguous joins, and malformed expressions, then display generated criteria before a permitted user saves the definition.
-
-### Requirement REQ-033: Report templates with controlled editability and sharing
-- **Priority:** Should Have
-- **Sources:** `email_report_features.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Query/Queue
-
-Administrators shall create, publish, version, clone, archive, and distribute report templates containing query definition, layout, permitted parameters, and output format. Each parameter and display field shall be marked fixed, administrator-editable, or staff-editable. Staff may run published templates or clone them without changing protected definitions. Sharing, folders, and execution shall use effective permissions, and every publication or revision shall record actor, timestamp, and version.
-
-### Requirement REQ-034: Predefined executive and board report templates
-- **Priority:** Must Have
-- **Sources:** `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `survey_results_2009.txt`
-- **Subsystem:** Query/Queue
-
-The system shall supply an acceptance-catalog template set containing, at minimum, collection size and change, circulation and usage, acquisitions and expenditures, branch performance, patron activity, and financial summary reports. Each template shall define fixed query logic, reporting period, approved parameters, data-source version, required charts or tables, and export format. Administrators may publish revisions, while end users may run approved versions without constructing ad-hoc queries.
-
-### Requirement REQ-035: Fair report priority scheduling
-- **Priority:** Must Have
-- **Sources:** `email_report_features.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`
-- **Subsystem:** Query/Queue
-
-The queue shall support Low, Normal, High, and Critical levels ordered by priority and FIFO submission time. A waiting Normal job reaching 30 minutes or being bypassed by five higher-priority job starts shall be promoted exactly once to High, and that level persists until execution begins. Promotion does not repeatedly escalate the job. Authorized priority changes require actor, old and new levels, reason, timestamp, and audit entry.
-
-### Requirement REQ-036: Consistent null and blank serialization
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
-- **Subsystem:** Query/Queue
-
-Traceability: meeting_tech_subcommittee_2009-06-30.txt; survey_results_2009.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. REQ-036 is authoritative for format serialization and supersedes duplicate preservation language in REQ-047. CSV shall encode NULL as an empty field and empty string identically, with a companion schema marking nullable columns; XLSX shall use an empty cell for NULL and a zero-length string cell for empty string; HTML shall use an empty cell for both. Row and column cardinality shall remain unchanged.
-
-### Requirement REQ-037: Display report selection criteria used
-- **Priority:** Should Have
-- **Sources:** `evergreen_reference_2009.txt`
-- **Subsystem:** Query/Queue
-
-Every completed, failed, previewed, or exported report shall display and retain the effective selection criteria used for execution. The criteria record shall include report or template version, saved query identifier and version when applicable, filters, date range, time zone, scope, category version, snapshot identifier, and system-applied defaults. Users shall be able to retrieve this record with the result so reruns can reproduce or explain the output.
-
-### Requirement REQ-038: Canonical job progress presentation
-- **Priority:** Must Have
-- **Sources:** `survey_results_2009.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
-- **Subsystem:** Query/Queue
-
-Traceability: survey_results_2009.txt; evergreen_reference_2009.txt; interview_sysadmin_2009-05-10.txt. For countable jobs, the interface shall show completed units, total units, percentage, start time, elapsed time, and throughput-based estimate; for non-countable jobs it shall show phase and elapsed time without inventing a percentage. Status shall refresh at least every 30 seconds. Historical durations shall be restricted by report permissions, and lifecycle, retry, and cancellation semantics shall come only from REQ-029 and REQ-067.
-
-### Requirement REQ-039: WCAG-compliant interfaces and reports
-- **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Security/Auth
-
-Traceability: early_draft_srs_galecia.txt; interview_sysadmin_2009-05-10.txt; meeting_minutes/meeting_2009-07-20_minutes.txt; meeting_tech_subcommittee_2009-06-30.txt. REQ-039 is authoritative for WCAG 2.1 Level AA conformance across administrative screens and generated HTML reports; REQ-061 adds only its test matrix. Release testing shall include keyboard-only operation, focus order, semantic structure, labels, contrast, alternatives, tables, representative screen readers, and supported browsers. Critical navigation or interpretation failures shall block acceptance.
-
-### Requirement REQ-040: Owned and contextual online help
-- **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`
-- **Subsystem:** Query/Queue
-
-Each supported report, parameter, workflow, and error state shall map to a stable context identifier and versioned HTML help topic. The controlled help catalog shall assign owner, reviewer, publication date, and release version, and require hierarchical navigation, search, cross-links, and contextual access. Release validation shall verify every referenced identifier resolves, every required topic is published, and no broken links remain in supported interfaces or exports.
-
-### Requirement REQ-041: Centralized system authorization model
-- **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `email_staff_login.eml`, `email_report_features.eml`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`
-- **Subsystem:** Security/Auth
-
-A centralized role- and group-based authorization service shall evaluate authentication, report creation, execution, scheduling, export, administration, patron-data access, deletion, and configuration at every API and interface boundary. Decisions shall deny by default and record actor, effective roles, resource, action, policy version, and result. Role or group changes shall be visible on the next authorization check, without per-user permission edits, and authorization failures shall not disclose protected data.
-
-### Requirement REQ-042: Report artifact and folder permissions
-- **Priority:** Must Have
-- **Sources:** `email_report_features.eml`, `email_staff_login.eml`, `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Security/Auth
-
-Owners or administrators shall assign view, edit, clone, execute, schedule, export, and folder-management permissions to named users or groups for each report artifact. Shared folders shall inherit permissions by default; overrides are permitted only where the authorization model explicitly supports them. The system shall display effective permissions to authorized administrators and re-evaluate artifact access immediately after role or membership changes, recording denied attempts for audit.
-
-### Requirement REQ-043: Authorized audited state-changing actions
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines018_item_transfer.eml`, `conversations/conv_pines021_item_purging.eml`
-- **Subsystem:** Security/Auth
-
-Traceability: meeting_tech_subcommittee_2009-06-30.txt; meeting_minutes/meeting_2009-07-20_minutes.txt; conversations/conv_pines018_item_transfer.eml; conversations/conv_pines021_item_purging.eml. Any record-changing operation shall require role authorization, preview where applicable, explicit confirmation, and invocation of the sanctioned ILS workflow described by REQ-045. The reporting system shall not write ILS data directly. Submission, cancellation request, completion, failure, actor, and affected-item counts shall be audited, while operation-specific evidence remains governed by REQ-015 and REQ-017.
-
-### Requirement REQ-044: Deletion and denied-action audit trail
-- **Priority:** Must Have
-- **Sources:** `conversations/conv_pines022_deletions.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Security/Auth
-
-REQ-044 is authoritative for successful and denied deletion attempts. Each append-only event shall record resource type and stable identifier, actor, branch, synchronized timestamp, requested action, authorization result, reason, parent relationship, transaction outcome, and policy version. Audit records shall be retained for the duration specified by the controlled records-retention policy, or longer where a legal hold applies, and authorized investigators shall query them without unrelated patron fields.
-
-### Requirement REQ-045: Read-only reporting and sanctioned ILS boundary
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Security/Auth
-
-Traceability: meeting_tech_subcommittee_2009-06-30.txt, section “read-only ILS integration.” Reporting connections shall use credentials lacking write, schema-change, and procedure-execution privileges, and application validation shall reject write statements. Record-changing transfers, status conversions, reversions, and deletions are permitted only through a separately deployed, explicitly authorized ILS workflow interface with its own permissions, confirmation, transaction, and audit controls. Reporting services may submit requests but shall not execute direct mutations; rejected attempts shall be audited.
-
-### Requirement REQ-046: Authoritative current historical semantics
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines014_material_volume.eml`
-- **Subsystem:** Query/Queue
-
-REQ-046 is authoritative for temporal reporting. Current reports read the latest authoritative state at execution; historical reports read an immutable snapshot identified by scope, cutoff, source version, capture time, and completeness. Corrections or deletions made after the cutoff are not retroactively inserted into that snapshot. Recreating the same cutoff shall return the same immutable snapshot and result; if none exists, the system shall report unavailable rather than silently substitute later data.
-
-### Requirement REQ-047: Query output preserves empty values
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`
-- **Subsystem:** Query/Queue
-
-Traceability: meeting_tech_subcommittee_2009-06-30.txt; survey_results_2009.txt. Query results shall retain every source row and column, including values that are NULL or empty strings, and shall never omit rows or collapse columns during rendering, filtering, pagination, or export. Format-specific representation is defined exclusively by REQ-036, including its companion nullable-column metadata. Consumers shall therefore receive deterministic cardinality and explicit handling instructions without duplicate serialization rules.
-
-### Requirement REQ-048: Protected administrator diagnostics
-- **Priority:** Must Have
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
-- **Subsystem:** Query/Queue
-
-Users shall receive only a non-sensitive failure message containing job identifier, error category, and recovery guidance. Authorized administrators may view correlated diagnostics containing query fragment, table or field, execution phase, and database code, with patron values, credentials, connection strings, and unrestricted SQL redacted. Diagnostics shall be encrypted, access-controlled, retained for the duration specified by the controlled retention policy, and audited whenever viewed, downloaded, or exported.
-
-### Requirement REQ-049: Versioned secure external exchanges
-- **Priority:** Should Have
-- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Material Volume
-
-The controlled interoperability profile registry shall identify the approved MARC21 revision and UN/EDIFACT message-directory release for every partner; profiles lacking those versions are invalid. Compatibility shall be checked against the registry before activation and during exchange validation. Each profile shall define direction, schema, encoding, idempotency key, acknowledgement, timeout, retry limit, quarantine behavior, and no-partial-import handling. HTTPS requires TLS 1.2 or later and SFTP requires SSH public-key authentication.
-
-### Requirement REQ-050: Bounded OPAC availability integration
+### Requirement REQ-024: Relational Database Backend for Management Processes
 - **Priority:** Must Have
 - **Sources:** `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: early_draft_srs_galecia.txt; meeting_tech_subcommittee_2009-06-30.txt. The management component is the configured ILS availability interface, and latency is measured from source event availability to successful reporting-tier receipt. Under normal operation, synchronization shall complete within five minutes. After failure, the system shall retain the last successful snapshot, mark it stale with timestamp, retry after 1, 2, 4, 8, and 16 minutes, then cap retries at 30-minute intervals; stale data shall never be labeled current or block OPAC transactions.
+The system shall use a fully relational database back-end to store and manage bibliographic, item, patron, order, hold/request, transaction, and financial records referenced by the Management Processes. This requirement ensures data integrity and queryability while supporting reporting and integration with other ILS modules.
 
-### Requirement REQ-051: Controlled environment configuration promotion
-- **Priority:** Should Have
-- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `interview_sysadmin_2009-05-10.txt`
+### Requirement REQ-025: Standards-Compliant HTML Output for Web Components
+- **Priority:** Must Have
+- **Sources:** `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: early_draft_srs_galecia.txt; meeting_minutes/meeting_2009-07-20_minutes.txt; meeting_tech_subcommittee_2009-06-30.txt; interview_sysadmin_2009-05-10.txt. Promotion shall be the single authoritative process for templates, saved queries, schedules, permissions, categories, and reference data; REQ-052 is its template/query subset. Versioned packages shall validate dependencies and conflicts, require approval before production import, preserve identifiers when safe, support rollback, and exclude unmasked patron or financial data from lower environments under the approved data-handling procedure.
+Web-based components of the Management Processes shall produce standards-compliant HTML output. This is intended to ensure consistent rendering across browsers, maintainability, and compatibility with assistive technologies so that online help and reporting interfaces work reliably for all users.
 
-### Requirement REQ-052: Template and query promotion subset
+### Requirement REQ-026: Development and Training Environment With Migratable Configurations
 - **Priority:** Should Have
-- **Sources:** `evergreen_reference_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`
+- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Security/Auth
+
+The system shall provide a development and training environment and support migration of configurations to a production environment. Users must be able to export and import configuration artifacts such as report templates, saved queries, and permission settings between environments to configure and test safely without impacting production data, and then promote validated configurations to production.
+
+### Requirement REQ-027: Role and Group Based Access Control for Management Functions
+- **Priority:** Must Have
+- **Sources:** `early_draft_srs_galecia.txt`, `email_staff_login.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
+- **Subsystem:** Security/Auth
+
+The system shall control user rights and privileges using security groups or role constructs that allow access control for individuals, workgroups, and arbitrary staff groups. It must enable Local System Administrators, Library Managers, Library Administrators, and Global System Administrators to have appropriate and distinct permissions for management functions and reports.
+
+### Requirement REQ-028: Online Hierarchical Cross-Linked Help System
+- **Priority:** Must Have
+- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `interview_sysadmin_2009-05-10.txt`, `evergreen_reference_2009.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: evergreen_reference_2009.txt; meeting_tech_subcommittee_2009-06-30.txt; survey_results_2009.txt; meeting_minutes/meeting_2009-07-20_minutes.txt; meeting_minutes/meeting_2009-03-15_minutes.txt. This requirement is limited to the template and saved-query objects covered by REQ-051. Packages shall preserve structure, filters, parameter definitions, schedule metadata, and applicable permissions, while dependency validation, approval, conflict handling, rollback, identifiers, and environment data protections shall follow REQ-051 rather than being reimplemented here.
+The system shall provide an online, hierarchical, cross-linked help system in HTML that describes and illustrates all system functions. This online help must be accessible from front-end interfaces and provide contextual and navigable documentation for both routine users and administrators.
 
-### Requirement REQ-053: Reconciled financial ledger reporting
+### Requirement REQ-029: User-Friendly Query Designer for Report Construction
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`, `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
-- **Subsystem:** Financial
+- **Sources:** `email_report_features.eml`
+- **Subsystem:** Query/Queue
 
-Financial reports shall preserve immutable ledger events for charges, payments, waivers, refunds, reversals, corrections, and acquisitions, including event type, amount, currency, timestamp, source, actor, and branch. For each period, the system shall compare event totals with source-system control totals, classify differences by source and type, and expose discrepancies rather than adjust silently. Exports shall retain original events and linked corrections for the applicable accounting-policy period.
+Provide a query design interface that enables staff to build queries against all record types using selectable fields, picklists, Boolean operators, and selectable regular-expression capabilities. The tool must be user-friendly for staff while allowing administrators to control access to advanced query features, enabling flexible ad hoc and repeatable queries across system data.
 
-### Requirement REQ-054: Policy-controlled financial retention
+### Requirement REQ-030: Report Template Management With Restricted Editable Fields
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`
-- **Subsystem:** Financial
+- **Sources:** `email_report_features.eml`
+- **Subsystem:** Query/Queue
 
-The system shall implement retention rules approved by the applicable accounting and audit policy, including configurable retention duration by record type. Legal holds shall suspend disposal, while statutory deletion obligations shall be escalated for documented policy resolution rather than overridden silently. Retention execution shall produce an auditable report of retained, held, archived, and deleted records, and shall preserve ledger evidence required for reconciliation.
+Administrators must be able to create, store, and distribute report templates that staff can run as-is or run after making permitted modifications. Templates should be clonable to create variants while preserving originals. The system must allow admins to restrict which filters and display fields can be altered by non-admin users to ensure consistency and protect sensitive fields.
 
-### Requirement REQ-055: Timed patron balance threshold queries
+### Requirement REQ-031: Fine-Grained Report Permissions and Shared Folder Control
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`
-- **Subsystem:** Financial
+- **Sources:** `email_report_features.eml`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+- **Subsystem:** Security/Auth
 
-Balance queries shall specify currency, effective-as-of timestamp, home-library scope, and threshold comparison. The calculated balance shall identify included pending, posted, waived, refunded, and disputed amounts according to the configured financial policy and shall show each component. Threshold evaluation shall be inclusive or exclusive as selected, and only authorized staff may view patron-level results or export them.
+Implement fine-grained report permissions administered through roles and security groups so administrators can control who can create, clone, modify, and run reports. Permissions administration must integrate with role changes so changing a user's role updates their report permissions automatically and supports shared folders for controlled report distribution. Additionally, administrators must be able to restrict template creation and execution according to roles and folder-level sharing.
 
-### Requirement REQ-056: Financial breakdown and balance reports
+### Requirement REQ-032: Predefined Board/Executive Report Templates and Interface
+- **Priority:** Should Have
+- **Sources:** `email_report_features.eml`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Patron Demographics
+
+Provide a set of predefined reports intended for board and director use that present basic statistics and activity metrics (for example checkouts, check-ins, holds placed/filled) and allow cross-tabulation by terminal, branch, system, hour, age range, patron type, and patron location. These predefined templates must support common annual reporting needs and be available via an executive/board reporting interface.
+
+### Requirement REQ-033: Report Queue Status, Failure Visibility, and Cancellation Controls
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`
-- **Subsystem:** Financial
+- **Sources:** `email_report_features.eml`, `survey_results_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+- **Subsystem:** Query/Queue
 
-Financial reports shall show balances and charge or payment totals by patron, branch, period, charge type, waiver status, and payment method using the same currency and as-of rules as REQ-055. Each report shall distinguish pending, posted, waived, refunded, reversed, and disputed amounts, support last-month, year-to-date, and rolling-period filters, and restrict patron-level output and export through authorization controls.
+The system must queue report jobs and show users their submission timestamp, queue position or processing state, and status such as waiting, running, completed, or failed. It must display failure reasons and allow users or administrators to cancel scheduled or currently running reports. The processing engine must check cancellation signals during execution so long-running jobs can stop in a controlled manner.
 
-### Requirement REQ-057: Non-duplicating financial joins
+### Requirement REQ-034: Background and Isolated Processing for Long-Running Reports
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`
-- **Subsystem:** Financial
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+- **Subsystem:** Query/Queue
 
-Financial reports shall join patron, account, transaction, item, and bibliographic records through documented stable keys and declared cardinality. One-to-many relationships shall be aggregated at the intended grain before joining to another one-to-many relation, preventing duplicated charges or purchase values. Each report shall display its grain, join keys, and reconciliation totals, and validation shall compare aggregated results with source control totals.
+The system shall process large or complex reports as queued or background work without degrading primary functions such as OPAC and circulation. It should support scheduled execution, avoid tying up production resources during peak interactive use, and may use read-only reporting replicas where appropriate. The design should remain compatible with PostgreSQL architecture and PINES server environments when required.
 
-### Requirement REQ-058: Comparable item value calculation
+### Requirement REQ-035: Flexible Scheduling and Delivery of Recurring Reports
 - **Priority:** Must Have
-- **Sources:** `email_financial_reports.eml`
+- **Sources:** `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt`
+- **Subsystem:** Query/Queue
+
+Users must be able to schedule reports to run at configurable intervals including ASAP, hourly, daily, weekly, monthly, and yearly, and specify delivery mechanisms such as direct download or email delivery. Saved schedules should support recurring execution and include basic run-time options for operational automation.
+
+### Requirement REQ-036: Save and Reuse Query Definitions and Templates
+- **Priority:** Must Have
+- **Sources:** `evergreen_reference_2009.txt`, `interview_cataloging_2009-05-08.txt`, `survey_results_2009.txt`
+- **Subsystem:** Query/Queue
+
+The system must allow staff to save query definitions and report templates for repeated use, allow editing of saved templates, and provide mechanisms for organizing and reusing those templates. This enables recurring workflows such as monthly transfers and repeated weeding queries without reconstructing complex selection criteria each time.
+
+### Requirement REQ-037: Advanced Query Capabilities for Custom Reports
+- **Priority:** Must Have
+- **Sources:** `evergreen_reference_2009.txt`
+- **Subsystem:** Query/Queue
+
+The reporting interface must support constructing complex queries beyond simple filters, including Boolean combinations and access to a broad set of reportable fields. This capability is required so staff can produce sophisticated reports that cannot be expressed with limited query constructs or overly restricted field selection.
+
+### Requirement REQ-038: CSV Excel-Compatible and HTML Report Output
+- **Priority:** Should Have
+- **Sources:** `evergreen_reference_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`
+- **Subsystem:** Query/Queue
+
+Reports must be exportable in CSV, Excel-compatible or Excel format, and HTML. CSV shall support reliable raw-data extraction, Excel output shall support business-user analysis including pivot-table workflows, and HTML shall support web display. Providing these formats enables downstream analysis and allows users to consume results through machine-oriented or presentation-oriented workflows.
+
+### Requirement REQ-039: Uploaded-Based Filtering for Bulk Identifiers
+- **Priority:** Should Have
+- **Sources:** `evergreen_reference_2009.txt`
+- **Subsystem:** Query/Queue
+
+The system should accept uploaded text files (for example lists of barcodes or other identifiers) to be used as selection filters for reports and batch operations. This supports running reports or batch moves against externally-defined sets of items without manual per-item selection.
+
+### Requirement REQ-040: Snapshot Historical Reporting and Transaction Retention
+- **Priority:** Must Have
+- **Sources:** `survey_results_2009.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
+- **Subsystem:** Query/Queue
+
+The system shall maintain transaction history for a configurable retention period X days and retain monthly and annual aggregates indefinitely to support historical reporting. Users must be able to generate reports that reflect the system state on a specified past date so snapshot-style historical queries can be produced even if shelving locations or other attributes changed since that date.
+
+### Requirement REQ-041: Grouped Transaction Reporting by Organizational Dimensions
+- **Priority:** Must Have
+- **Sources:** `survey_results_2009.txt`
+- **Subsystem:** Query/Queue
+
+Transaction reports must support grouping and aggregation by hour, terminal, branch, library group, system, and county. The reporting results shall provide totals at applicable time, service-point, organizational, and geographic levels, enabling staff to identify busy periods, compare activity among operating units, and analyze transaction volume across the specified dimensions for planning and management purposes.
+
+### Requirement REQ-042: Count Checkin and Checkout Types Separately
+- **Priority:** Must Have
+- **Sources:** `survey_results_2009.txt`
 - **Subsystem:** Material Volume
 
-Item-value reports shall state currency and whether values represent historical purchase cost or an approved current valuation. Missing, zero, and invalid purchase prices shall be counted and reported separately rather than treated as zero without disclosure. Totals shall aggregate only the selected item grain, apply status, format, collection, location, and call-number filters deterministically, and expose included and excluded counts.
+Reports must distinguish and count different types of check-ins and check-outs separately, such as book-drop versus terminal versus self-service check-ins, and staff checkout versus self checkout plus renewal types. Aggregates across all types should also be available for cumulative metrics.
 
-### Requirement REQ-059: Anonymized demographic aggregation
+### Requirement REQ-043: Count Holds by Placement Method
+- **Priority:** Must Have
+- **Sources:** `survey_results_2009.txt`
+- **Subsystem:** Query/Queue
+
+Hold reports shall include the method of placement (for example at staff desk, at public computer, or remotely) so holds and related statuses (fills, stale holds) can be analyzed with placement context. This requires storing and surfacing placement method on hold events.
+
+### Requirement REQ-044: Anonymized Demographic Statistics by Age and Geography
 - **Priority:** Must Have
 - **Sources:** `survey_results_2009.txt`
 - **Subsystem:** Patron Demographics
 
-Demographic reports shall remove direct identifiers before aggregation and permit only approved geography and age-band dimensions. Cells below the configured minimum count of five shall be suppressed, combined, or rounded; complementary-cell analysis shall prevent reconstruction by subtraction across totals or overlapping views. Exports shall contain aggregate values only. A privacy administrator may approve a lower threshold only through a versioned exception with justification, expiry, scope, and audit record.
+Demographic reporting shall provide aggregated statistics by geographical region and age range while protecting patron privacy. The system must prevent personally identifiable information from being exposed in these reports and must present results at a level suitable for program planning, service analysis, and comparison of demographic patterns without revealing individual patron identities or records.
 
-### Requirement REQ-060: Large-dataset execution service usage
+### Requirement REQ-045: Inclusion of Null and Blank Fields in Results
 - **Priority:** Must Have
-- **Sources:** `conversations/conv_pines024_inactive_patrons.eml`, `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `survey_results_2009.txt`, `conversations/conv_pines023_patron_characteristics.eml`
 - **Subsystem:** Query/Queue
 
-Traceability: conversations/conv_pines024_inactive_patrons.eml; evergreen_reference_2009.txt; interview_sysadmin_2009-05-10.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. Large reports and queries shall use the shared service defined by REQ-027 and canonical lifecycle defined by REQ-029; this requirement does not create a second queue, cache, status model, or notification mechanism. A submission shall be on-demand or scheduled, execute asynchronously, expose its job identifier, and return control to interactive administration immediately.
+Report results shall explicitly include null and blank fields so missing data remains visible to users. The system must not prune or omit rows/columns solely because fields are null; null-handling must preserve the presence of blanks as part of the returned dataset.
 
-### Requirement REQ-061: Accessibility acceptance test coverage
+### Requirement REQ-046: Error Reporting With High-Level and Low-Level Feedback
 - **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `interview_sysadmin_2009-05-10.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
-- **Subsystem:** Security/Auth
-
-Traceability: early_draft_srs_galecia.txt; interview_sysadmin_2009-05-10.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. REQ-061 is the acceptance-test subset of REQ-039, not an additional accessibility rule. Testing shall cover supported browsers and desktop operating systems, keyboard-only workflows, focus order, screen-reader navigation, generated HTML tables, export rendering, labels, contrast, and semantic structure. Each failure shall identify component, criterion, severity, and reproduction steps; critical task-blocking defects shall prevent acceptance.
-
-### Requirement REQ-062: Validated HTML5 output
-- **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
 - **Subsystem:** Query/Queue
 
-Web pages, help topics, and HTML report exports shall declare UTF-8 and conform to the HTML Living Standard within the supported feature scope. Automated validation shall check document structure, nesting, applicable unique identifiers, encoding, and absence of validation errors against representative static pages and generated reports. The build shall retain validation results and fail release acceptance on errors, while WCAG conformance remains separately governed by REQ-039 and REQ-061.
+When reports fail, the system must provide thorough high-level error reporting for users and low-level query-specific feedback for administrators. Admin diagnostics must expose actionable information so staff can troubleshoot failures, including details sufficient to identify where the failure occurred and why.
 
-### Requirement REQ-063: Transactional consistency for sanctioned operations
+### Requirement REQ-047: Report Queue Priority and Queue Jumping
 - **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`
+- **Sources:** `email_report_features.eml`
 - **Subsystem:** Query/Queue
 
-Traceability: early_draft_srs_galecia.txt, persistence architecture section. The persistence layer shall provide ACID behavior for reporting metadata, requests, permissions, ledger events, and audit records, while ILS record mutations occur only in the sanctioned interface defined by REQ-045. A committed request shall have required audit metadata; a failed request shall not claim success or leave partial reporting state. Idempotency keys, unique identifiers, referential integrity, and repeatable snapshot reads shall be enforced by the approved relational architecture.
+The system must provide functionality allowing authorized users or high-priority report types to be elevated in the reporting queue so important reports (for example board reports) can execute ahead of lower-priority ad-hoc queries. The system must support prioritization controls that can change a job’s queue priority when operationally necessary.
 
-### Requirement REQ-064: Controlled supported server baseline
+### Requirement REQ-049: Management Reporting Isolated From OPAC Performance
 - **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
 - **Subsystem:** Query/Queue
 
-Traceability: early_draft_srs_galecia.txt, platform support section. The approved release compatibility matrix shall be a controlled acceptance artifact, versioned and approved by the product owner before release. For this baseline it shall list Linux distributions with supported major versions Ubuntu 22.04 LTS and RHEL 9, and Solaris 11.4, plus runtime, drivers, service managers, and monitoring interfaces. Installation, health checks, representative reporting, and read-only integration tests shall pass on every listed platform.
+Management Processes shall exchange data with the Online Public Access Catalog where needed to support reporting and related management workflows, but they shall not constrain, alter, or limit OPAC module functionality. Reporting activities must be separated or otherwise controlled so they do not slow public catalog responsiveness or degrade patron-facing services during normal use.
 
-### Requirement REQ-065: Supported browser client access
+### Requirement REQ-052: In-Transit, Missing, and Damaged Reports Support Delivery Coordination
 - **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
-- **Subsystem:** Query/Queue
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines019_020_missing_intransit.eml`, `interview_cataloging_2009-05-08.txt`
+- **Subsystem:** Material Volume
 
-Traceability: early_draft_srs_galecia.txt; meeting_minutes/meeting_2009-07-20_minutes.txt. The supported desktop scope is Windows 11 and macOS 14 or later minor releases approved in the compatibility matrix. Browser support means the latest two vendor-supported major versions available at release for Chrome, Edge, Firefox, and Safari, recorded by version and test date in that matrix. Every supported combination shall provide equivalent authentication, authorization, results, exports, scheduling, and REQ-039 accessibility behavior.
+The system shall provide reports that support collection health monitoring and delivery coordination between branches, including an in-transit item reporting capability and missing/damaged reporting broken down by branch. These reports should help staff locate lost transfers between branches and support local inventory reconciliation and remedial action planning.
 
-### Requirement REQ-066: Bounded administrative impact on OPAC
-- **Priority:** Must Have
-- **Sources:** `early_draft_srs_galecia.txt`
-- **Subsystem:** Query/Queue
-
-REQ-066 is limited to acceptance testing of the OPAC protection outcome and does not redefine the resource limit in REQ-030. Using the same controlled REQ-028 workload, baseline, and synchronized five-minute rolling windows, load tests shall demonstrate that OPAC service-level objectives remain satisfied while REQ-030 limits hold. Tests shall include sustained and peak concurrency, record throttling or pause actions, and retain metrics proving no production breach.
-
-### Requirement REQ-067: Bounded retry and cancellation behavior
-- **Priority:** Must Have
-- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_tech_subcommittee_2009-06-30.txt`
-- **Subsystem:** Query/Queue
-
-Each job may receive at most three automatic retries after its initial attempt; the initial attempt is not counted as a retry. Retry delays shall be 30 seconds after retry one, two minutes after retry two, and ten minutes after retry three, unless a controlled policy changes the schedule. Cancellation shall prevent queued and future retries and be checked at submission, queue, worker, and commit checkpoints. Linked attempt identifiers and idempotency keys prevent duplicate committed work.
-
-### Requirement REQ-068: Distinct shelf utilization and weeding analysis
-- **Priority:** Must Have
-- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `interview_cataloging_2009-05-08.txt`
+### Requirement REQ-054: Batch Deletion Utility for Volumes, Copies, and Orphaned Bibliographic Records
+- **Priority:** Should Have
+- **Sources:** `conversations/conv_pines021_item_purging.eml`, `interview_cataloging_2009-05-08.txt`
 - **Subsystem:** Weeding/Purging
 
-The shelf-utilization report shall calculate occupied shelf length divided by installed usable shelf length for each branch and category, using measurements from one identified date and source. It shall show numerator, denominator, occupancy percentage, circulation context, exclusions, and incomplete measurement status. It shall not determine purge eligibility or change item state. Candidate identification, Boolean criteria, duration rules, approval, and conversion remain exclusively delegated to REQ-014 and REQ-015.
+The system should provide a quick utility for batch deletion of volume records together with associated copy/item entries, and for removal of bibliographic records that have no item attachments. The utility must present identified records in a non-destructive manner first (listing or preview) and require explicit confirmation before deletion.
 
-### Requirement REQ-069: Controlled weeding criteria workflow
+### Requirement REQ-055: Branch-Specific Weeding and Purging Candidate Reports
 - **Priority:** Must Have
-- **Sources:** `interview_cataloging_2009-05-08.txt`, `evergreen_reference_2009.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `conversations/conv_pines021_item_purging.eml`
 - **Subsystem:** Weeding/Purging
 
-REQ-069 is a bounded extension of REQ-014 and shall not redefine its grammar, operators, field typing, or candidate-report format. It adds status, status-duration days, last-circulation date, circulation count, and location predicates using REQ-014 validation; dates use report time zone and missing values never match. Candidate creation is read-only. Batch changes require importing candidates, item-by-item revalidation, preview, confirmation, and invocation of REQ-015; bypass is prohibited.
+The system shall provide weeding and deselection reports for collection maintenance that identify withdrawal or purge candidates according to agreed criteria. Reports must support branch-specific candidate lists so librarians can review shelf content, manage collection quality, and organize withdrawal activities appropriately for each participating location while retaining the reporting focus on actionable maintenance decisions.
+
+### Requirement REQ-056: Management Reporting and Analysis Tools Include Inventory and Capacity Reporting
+- **Priority:** Must Have
+- **Sources:** `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Material Volume
+
+Management Processes shall include inventory and capacity reports that allow staff to analyze collection size, branch-level holdings, and capacity utilization, and support decisions about distribution and shelving. These reports are expected to be used frequently, including daily, for branch-level inventory management.
+
+### Requirement REQ-057: Cross-Branch Circulation and Inventory Comparison Reports
+- **Priority:** Must Have
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Query/Queue
+
+The reporting tool shall support comparison reports across branches for circulation, inventory, and other available metrics. Results must allow managers to examine differences between locations and evaluate relative performance and capacity, providing information useful for collection redistribution, operational planning, and management decisions involving multiple branches within the organization.
+
+### Requirement REQ-058: Linux and Solaris Server Deployment
+- **Priority:** Must Have
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Query/Queue
+
+Management Processes shall be deployable and operable on Linux or Solaris server operating systems. Reporting components must support production deployment on either server platform used by PINES member installations, allowing the management-processing environment to run on the applicable operating system without restricting deployment to only one of these supported server platforms.
+
+### Requirement REQ-059: Financial Reporting and Auditable Financial Tracking
+- **Priority:** Must Have
+- **Sources:** `email_financial_reports.eml`, `meeting_minutes/meeting_2009-03-15_minutes.txt`, `meeting_minutes/meeting_2009-07-20_minutes.txt`, `survey_results_2009.txt`
+- **Subsystem:** Financial
+
+The system must provide financial reporting to track and verify financial transactions with branch-level and system-level financial data necessary for budgeting, audits, and director-level oversight. It must include an auditable ledger of all patron payments linked to charges for reconciliation and audit, and support reporting on balances and accrued fines/charges with time-series and category breakdowns, including waived fines by branch and period.
+
+### Requirement REQ-060: Financial Reports Compliance, Retention, and Transaction Archive With Privacy Protection
+- **Priority:** Must Have
+- **Sources:** `email_financial_reports.eml`, `email_report_features.eml`
+- **Subsystem:** Financial
+
+All financial reports and archived financial data must comply with standard accounting practices and applicable auditing and retention requirements, supporting archiving and retention policies and authorized retrieval. The system must maintain an archive of transactional records that preserves the ability to produce permitted statistics while protecting patron privacy per applicable state law, supporting required retention periods.
+
+### Requirement REQ-061: Inventory/Capacity and Shelf Space Reporting Enable Space Allocation Planning
+- **Priority:** Must Have
+- **Sources:** `interview_cataloging_2009-05-08.txt`, `conversations/conv_pines016_shelf_space.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+- **Subsystem:** Material Volume
+
+The reporting system must provide collection development and space allocation decision support by including material volume reporting and shelf space utilization analyses. These outputs should support assessment of physical shelving use and enable planning actions such as weeding, redistributing, or changing collection allocations based on quantified relationships between usage and shelf space.
+
+### Requirement REQ-062: Data Specifications and Record Validation Documentation for Management Processes
+- **Priority:** Must Have
+- **Sources:** `early_draft_srs_galecia.txt`, `meeting_tech_subcommittee_2009-06-30.txt`, `meeting_minutes/meeting_2009-03-15_minutes.txt`
+- **Subsystem:** Query/Queue
+
+The developer shall provide complete data specifications and data dictionaries for authority records, bibliographic records, order records, item records, hold/request records, and other records used by Management Processes. Additionally, provide high-level process descriptions (e.g., bibliographic import/export and validation) and ensure online hierarchical help in accessible HTML is provided to assist staff.
 
 # Blacklist: Discarded and Contradictory Proposals
 
 This section documents stakeholder suggestions and early draft proposals that were analyzed by the agentic network and discarded or rejected due to architectural conflict, privacy policy, or resource constraints (satisfying OS9).
 
-### Blacklist Item BLK-001: Mandatory magnetic card-swipe login as the only authentication
-- **Rationale:** A requirement mandating magnetic card-swipe as compulsory and bypassing individual authentication would conflict with role-based authentication integrity and could undermine auditability and authorization. No such mandatory-bypass requirement is needed because optional card-swipe support with proper identity mapping is already covered by other proposals.
-- **Sources:** `email_staff_login.eml`, `meeting_minutes/meeting_2009-07-20_minutes.txt`
+### Blacklist Item BLK-001: Won't Have: Automated Purging Without Confirmation
+- **Rationale:** Rejected because it contradicts the accepted purge workflow requiring read-only candidate reporting, a separate explicit confirmation step, and audit trails to prevent accidental mass data loss.
+- **Sources:** `conversations/conv_pines021_item_purging.eml`
 
-### Blacklist Item BLK-002: Unanonymized patron demographic reporting at individual level
-- **Rationale:** Proposals requiring demographic statistics to be reported without anonymization would violate privacy expectations and compliance needs. Existing requirements already define anonymized demographic statistics for aggregated reporting, making individual-level exposure unnecessary and disallowed.
-- **Sources:** `survey_results_2009.txt`, `early_draft_srs_galecia.txt`
+### Blacklist Item BLK-002: Won't Have: Exclude Null Values From Demographic Reports
+- **Rationale:** Rejected because it conflicts with the consolidated requirement that demographic reports must include records with null optional fields so missing data remains visible and reports do not silently misrepresent populations.
+- **Sources:** `conversations/conv_pines023_patron_characteristics.eml`
 
-### Blacklist Item BLK-003: Denormalized reporting warehouse required as a hard constraint
-- **Rationale:** Any explicit requirement to use a denormalized reporting warehouse as mandatory storage would be an architectural constraint not supported by the rest of the text. The system only needs to provide correct historical snapshot behavior; implementation details should remain flexible to avoid conflicting design assumptions.
-- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`, `interview_sysadmin_2009-05-10.txt`
+### Blacklist Item BLK-003: Do Not Constrain OPAC Functionality
+- **Rationale:** Explicitly rejected proposal; it is stated as an OPAC constraint that will not be implemented as part of Management Processes requirements, and therefore is not an active requirement to include.
+- **Sources:** `early_draft_srs_galecia.txt`
+
+### Blacklist Item BLK-004: Rejected: Run Reports Directly on Production Database
+- **Rationale:** Explicitly rejected; the documentation states executing complex reports directly on production transactional database is problematic because it can tie up resources and slow patron-facing services.
+- **Sources:** `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+
+### Blacklist Item BLK-005: Rejected: No Accessibility Compliance
+- **Rationale:** Explicitly rejected; the sysadmin states accessibility is mandatory and therefore a non-accessible reporting UI is unacceptable and must not be implemented.
+- **Sources:** `interview_sysadmin_2009-05-10.txt`
+
+### Blacklist Item BLK-006: Rejected: No Background Processing for Long-Running Reports
+- **Rationale:** Explicitly rejected; interviews state lack of background processing causes performance degradation of OPAC and circulation clients, so this approach must not be adopted.
+- **Sources:** `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+
+### Blacklist Item BLK-007: Rejected: No Role-Based Report Permission Controls
+- **Rationale:** Explicitly rejected because it contradicts required fine-grained report permission controls distinguishing who can create, edit, save, and run reports and how permissions are administered.
+- **Sources:** `evergreen_reference_2009.txt`, `interview_sysadmin_2009-05-10.txt`
+
+### Blacklist Item BLK-008: Rejected: Denormalize Production Database For Reporting
+- **Rationale:** Explicitly rejected; technical subcommittee advises against denormalization because maintaining synchronized denormalized copies creates more problems than it solves.
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`
+
+### Blacklist Item BLK-009: Rejected: Allow Reporting To Constrain OPAC Performance
+- **Rationale:** Explicitly rejected; the meeting states reporting must be separate from public catalog and must not slow or impact OPAC responsiveness for patrons.
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`
+
+### Blacklist Item BLK-010: Rejected: Provide Only Generic Error Messages
+- **Rationale:** Explicitly rejected; the requirement is for actionable diagnostics and meaningful high-level feedback rather than only generic errors like 'query failed'.
+- **Sources:** `meeting_tech_subcommittee_2009-06-30.txt`
+
+### Blacklist Item BLK-011: Support for Streamlined Staff Login Methods (Rejected)
+- **Rationale:** Explicitly rejected proposal to require streamlined login methods as mandatory; consensus is that streamlined login should be supported but not mandatory due to hardware availability differences.
+- **Sources:** `email_staff_login.eml`
+
+### Blacklist Item BLK-012: Permit Card-swipe to Bypass Authentication (Rejected)
+- **Rationale:** Explicitly rejected; card-swipe must still map to and record the individual staff member for auditing, so anonymous or bypassed logins are not acceptable.
+- **Sources:** `email_staff_login.eml`
+
+### Blacklist Item BLK-013: Unrestricted Template Modification by Staff (Rejected)
+- **Rationale:** Explicitly disallowed; non-admin staff must not be allowed to freely modify admin-controlled report templates because protected fields and consistency would be compromised.
+- **Sources:** `email_report_features.eml`
+
+### Blacklist Item BLK-014: Exclude Patron Facing OPAC Functions
+- **Rationale:** Explicitly rejected scope limitation: it states OPAC patron-facing functions belong to OPAC and must be excluded as out of scope; this contradicts the active requirement to interact with OPAC.
+- **Sources:** `meeting_minutes/meeting_2009-03-15_minutes.txt`
+
+### Blacklist Item BLK-015: Do Not Constrain OPAC Functionality
+- **Rationale:** Explicitly rejected duplicate OPAC constraint proposal; stated as explicitly rejected and excluded from implementation as part of Management Processes.
+- **Sources:** `meeting_minutes/meeting_2009-07-20_minutes.txt`, `early_draft_srs_galecia.txt`
+
+### Blacklist Item BLK-016: Defer Detailed UI Specification Now
+- **Rationale:** Explicitly rejected; detailed UI specification for reports and administrative screens is deferred and therefore excluded from the active requirement set.
+- **Sources:** `meeting_minutes/meeting_2009-03-15_minutes.txt`
